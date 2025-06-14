@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Admin Login - Learnify</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+        <h:outputStylesheet name="css/adminLoginStyles.css"/>
+
+        <!-- Font Awesome for Icons -->
+    </h:head>
+
+    <h:body>
+        <div class="login-container">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <a href="#" class="logo">
+                    <i class="fas fa-play"></i>
+                    Learnify
+                </a>
+            </div>
+
+            <!-- Welcome Section -->
+            <h2 class="welcome-title">Welcome Back</h2>
+            <p class="welcome-subtitle">Administrative access only</p>
+
+            <!-- Admin Icon Section -->
+            <div class="admin-section">
+                <div class="admin-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="admin-title">Admin Login</h3>
+                <p class="admin-subtitle">Administrative access only</p>
+            </div>
+
+            <!-- Login Form -->
+            <h:form id="loginForm">
+                <p:messages id="messages" showDetail="true" closable="true"/>
+
+                <!-- Admin Email Field -->
+                <div class="form-group">
+                    <label class="form-label">Admin Email</label>
+                    <p:inputText id="adminEmail" 
+                                 value="#{loginBean.email}"
+                                 placeholder="Enter admin email"
+                                 required="true"
+                                 requiredMessage="Admin email is required"
+                                 validatorMessage="Please enter a valid email address">
+                        <f:validateRegex pattern="^[A-Za-z0-9+_.-]+@(.+)$"/>
+                    </p:inputText>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <p:password id="password" 
+                                value="#{loginBean.password}"
+                                placeholder="Enter admin password"
+                                required="true"
+                                requiredMessage="Password is required"
+                                feedback="false"
+                                toggleMask="true"/>
+                </div>
+                <!-- Hidden field to set role -->
+            <h:inputHidden value="#{loginBean.selectedRole}" />
+
+                <!-- Login Button -->
+                <p:commandButton value="Admin Sign In" 
+                                 styleClass="login-button"
+                                 action="#{loginBean.login}"
+                                 update="messages"
+                                 process="@form"/>
+
+                <!-- Terms and Privacy -->
+                <p class="terms-text">
+                    By signing in, you agree to our 
+                    <a href="#">Terms of Service</a> and 
+                    <a href="#">Privacy Policy</a>
+                </p>
+            </h:form>
+        </div>
+
+<!--         Optional: Loading overlay 
+        <p:blockUI block="loginForm" trigger="loginForm:signInBtn">
+            <p:graphicImage value="/resources/images/loading.gif" />
+        </p:blockUI>-->
+    </h:body>
+</html>

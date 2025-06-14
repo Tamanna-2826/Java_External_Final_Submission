@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<ui:composition template="/sidebar.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <!-- Add CSS for the new form section -->
+    <h:head>
+        <h:outputStylesheet name="css/addCategory.css"/>
+        <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css"/>
+
+    </h:head>
+
+    <ui:define name="pageTitle">Categories Management</ui:define>
+    <ui:define name="pageSubtitle">Manage video categories for your platform</ui:define>
+
+    <ui:define name="topbarActions">
+        <p:commandButton value="Add Category"
+                         styleClass="btn-primary"
+                         icon="pi pi-plus"
+                         action="#{categoryBean.prepareNew}"
+                         process="@this"
+                         update=":addCategoryDialog :addCategoryForm"
+                         oncomplete="PF('addCategoryDialog').show()"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="categoriesForm">
+            <!-- Category Stats -->
+            <div class="category-stats">
+                <div class="stat-item">
+                    <div class="stat-value">#{categoryBean.totalCategories}</div>
+                    <div class="stat-label">Total Categories</div>
+                    <i class="fas fa-sort-down stat-icon"></i>
+                </div>
+                <div class="stat-item popular">
+                    <div class="stat-value">Programming</div>
+                    <div class="stat-label">Most Popular</div>
+                    <i class="fas fa-plus stat-icon"></i>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">693</div>
+                    <div class="stat-label">Total Videos</div>
+                    <i class="fas fa-sort-up stat-icon"></i>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">69</div>
+                    <div class="stat-label">Avg. Videos/Category</div>
+                    <i class="fas fa-sort-down stat-icon"></i>
+                </div>
+            </div>
+
+            <!-- Categories List Section -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h3>Categories List</h3>
+                    <p>Manage and organize your video categories</p>
+                </div>
+
+                <div class="table-controls">
+                    <div class="search-box">
+                        <div class="input-icon-wrapper">
+                            <p:inputText placeholder="Search categories..."
+                                         styleClass="search-input"
+                                         value="#{categoryBean.searchTerm}">
+                                <p:ajax event="keyup" listener="#{categoryBean.search}"
+                                        update="categoriesTable" process="@this"/>
+                            </p:inputText>
+                            <!--<i class="fas fa-search search-icon" style="margin-right: 50px"></i>-->
+                        </div>
+                    </div>
+                </div>
+
+                <p:dataTable id="categoriesTable"
+                             value="#{categoryBean.categories}"
+                             var="category"
+                             styleClass="categories-table"
+                             paginator="true"
+                             rows="10"
+                             paginatorPosition="bottom"
+                             emptyMessage="No categories found">
+
+                    <p:column headerText="Category Name" styleClass="name-column">
+                        <span class="category-name">#{category.categoryName}</span>
+                    </p:column>
+
+                    <p:column headerText="Description" styleClass="description-column">
+                        <span class="category-description">#{category.description}</span>
+                    </p:column>
+
+                    <!--                    <p:column headerText="Videos Count" styleClass="count-column">
+                                            <span class="video-count">#{category.videoCount}</span>
+                                        </p:column>-->
+
+                    <p:column headerText="Created Date" styleClass="date-column">
+                        <span class="created-date">
+                            <h:outputText value="#{category.createdAt}">
+                                <f:convertDateTime pattern="yyyy-MM-dd"/>
+                            </h:outputText>
+                        </span>
+                    </p:column>
+
+                    <p:column headerText="Actions" styleClass="actions-column">
+                        <div class="action-buttons">
+                            <p:commandButton icon="pi pi-pencil"
+                                             styleClass="btn-edit"
+                                             title="Edit"
+                                             action="#{categoryBean.edit(category)}"
+                                             process="@this"
+                                             update=":addCategoryDialog"
+                                             oncomplete="PF('addCategoryDialog').show()"/>
+                            <p:commandButton icon="pi pi-trash"
+                                             styleClass="btn-delete"
+                                             title="Delete"
+                                             action="#{categoryBean.delete(category.categoryID)}"
+                                             process="@this"
+                                             update="categoriesTable">
+                                <p:confirm header="Confirm Delete"
+                                           message="Are you sure you want to delete this category?"
+                                           icon="pi pi-exclamation-triangle"/>
+                            </p:commandButton>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </h:form>
+
+        <!-- Dialog for Add/Edit Category -->
+        <p:dialog id="addCategoryDialog"
+                  widgetVar="addCategoryDialog"
+                  header="Add New Category"
+                  modal="true"
+                  showEffect="fade"
+                  hideEffect="fade"
+                  resizable="false"
+                  width="500">
+            <!--<h:form id="addCategoryForm" prependId="false">-->
+                <ui:include src="addCategory.xhtml"/>
+            <!--</h:form>-->
+        </p:dialog>
+        <p:confirmDialog global="true"
+                         showEffect="fade"
+                         hideEffect="fade">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"/>
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <title>Lernify Admin Dashboard</title>
+        </f:facet>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+        <h:outputStylesheet name="css/adminStyles.css"/>
+
+    </h:head>
+
+    <h:body>
+        <div class="layout-wrapper">
+            <!-- Sidebar -->
+            <div class="layout-sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-container">
+                        <i class="fas fa-graduation-cap logo-icon"></i>
+                        <span class="logo-text">Learnify</span>
+                    </div>
+                    <div class="admin-info">
+                        <span class="admin-label">Admin Panel</span>
+                        <div class="admin-user">
+                            <span class="admin-name">#{loginBean.currentUserName}</span>
+                            <span class="admin-email">#{loginBean.email}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-menu">
+                    <p:menu model="#{adminMenuBean.menuModel}" styleClass="custom-menu"/>
+                    
+                    <!-- Alternative static menu -->
+                    <ul class="menu-list">
+                        <li class="menu-item">
+                            <h:link outcome="sidebar.xhtml" styleClass="menu-link">
+                                <i class="fas fa-tachometer-alt menu-icon"></i>
+                                <span>Dashboard</span>
+                                <span class="menu-badge">15.2K</span>
+                            </h:link>
+                        </li>
+                        <li class="menu-item">
+                            <h:commandLink action="users" styleClass="menu-link">
+                                <i class="fas fa-users menu-icon"></i>
+                                <span>Users</span>
+                                <span class="menu-badge">15.2K</span>
+                            </h:commandLink>
+                        </li>
+                        <li class="menu-item">
+                            <h:commandLink action="videos" styleClass="menu-link">
+                                <i class="fas fa-video menu-icon"></i>
+                                <span>Videos</span>
+                                <span class="menu-badge">2.8K</span>
+                            </h:commandLink>
+                        </li>
+                        <li class="menu-item">
+                            <h:commandLink action="playlists" styleClass="menu-link">
+                                <i class="fas fa-list menu-icon"></i>
+                                <span>Playlists</span>
+                                <span class="menu-badge">456</span>
+                            </h:commandLink>
+                        </li>
+                        <li class="menu-item active">
+                            <h:link outcome="categories.xhtml" styleClass="menu-link">
+                                <i class="fas fa-tags menu-icon"></i>
+                                <span>Categories</span>
+                                <span class="menu-badge">10</span>
+                            </h:link>
+                        </li>
+                        <li class="menu-item">
+                            <h:commandLink action="analytics" styleClass="menu-link">
+                                <i class="fas fa-chart-bar menu-icon"></i>
+                                <span>Analytics</span>
+                            </h:commandLink>
+                        </li>
+                        <li class="menu-item">
+                            <h:commandLink action="reports" styleClass="menu-link">
+                                <i class="fas fa-file-alt menu-icon"></i>
+                                <span>Reports</span>
+                                <span class="menu-badge">12</span>
+                            </h:commandLink>
+                        </li>
+                        <li class="menu-item">
+                            <h:commandLink action="settings" styleClass="menu-link">
+                                <i class="fas fa-cog menu-icon"></i>
+                                <span>Settings</span>
+                            </h:commandLink>
+                        </li>
+                    </ul>
+
+                    <div class="logout-section">
+                        <h:commandLink action="logout" styleClass="logout-link">
+                            <i class="fas fa-sign-out-alt menu-icon"></i>
+                            <span>Logout</span>
+                        </h:commandLink>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="layout-main">
+                <div class="layout-topbar">
+                    <div class="topbar-left">
+                        <h2 class="page-title">
+                            <ui:insert name="pageTitle">Admin Dashboard</ui:insert>
+                        </h2>
+                        <p class="page-subtitle">
+                            <ui:insert name="pageSubtitle">Manage your Education OTT platform</ui:insert>
+                        </p>
+                    </div>
+                    <div class="topbar-right">
+                        <ui:insert name="topbarActions"/>
+                    </div>
+                </div>
+
+                <div class="layout-content">
+                    <ui:insert name="content">
+                        <!-- Default Dashboard Content -->
+                        <div class="dashboard-stats">
+                            <div class="stat-card stat-users">
+                                <div class="stat-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>15,240</h3>
+                                    <p>Total Users</p>
+                                    <span class="stat-change">+15% this month</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card stat-videos">
+                                <div class="stat-icon">
+                                    <i class="fas fa-video"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>2,847</h3>
+                                    <p>Total Videos</p>
+                                    <span class="stat-change">+8% today</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card stat-views">
+                                <div class="stat-icon">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>1.3M</h3>
+                                    <p>Total Views</p>
+                                    <span class="stat-change">+13% this month</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card stat-engagement">
+                                <div class="stat-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>89K</h3>
+                                    <p>Engagement</p>
+                                    <span class="stat-change">Likes &amp; Comments</span>
+                                </div>
+                            </div>
+                        </div>
+                    </ui:insert>
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>

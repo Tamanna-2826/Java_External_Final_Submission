@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Learnify - Learn Without Limits</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+        <h:outputStylesheet name="css/landingStyles.css"/>
+    </h:head>
+
+    <h:body>
+        <!-- Header -->
+        <header class="header">
+            <div class="header-container">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    Learnify
+                </div>
+
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="#home">Browse</a></li>
+                        <li><a href="#categories">Categories</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                </nav>
+
+                <div class="header-actions">
+                    <a href="#login" class="btn btn-outline">Log In</a>
+                    <a href="#signup" class="btn btn-primary">Get Started</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-container">
+                    <h1 class="hero-title">Learn Without<br/>Limits</h1>
+                    <p class="hero-subtitle">
+                        Access thousands of high-quality educational videos, from industry experts.
+                        Start learning that matters in today's digital world.
+                    </p>
+
+                    <div class="hero-buttons">
+                        <a href="#start" class="btn btn-primary btn-large">Start Learning</a>
+                        <!--<a href="#instructor" class="btn btn-outline btn-large">Become an Instructor</a>-->
+                        <h:link outcome="uploaderLogin.xhtml" styleClass="btn btn-outline btn-large">
+                            Become an Instructor
+                        </h:link>
+
+                    </div>
+
+                    <!-- Stats Section -->
+                    <div class="stats-section">
+                        <div class="stat-item">
+                            <div class="stat-icon students">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-number">50K+</div>
+                            <div class="stat-label">Students</div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-icon instructors">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </div>
+                            <div class="stat-number">2.5K+</div>
+                            <div class="stat-label">Instructors</div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-icon courses">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="stat-number">100K+</div>
+                            <div class="stat-label">Video Lessons</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section class="categories-section">
+                <div class="categories-container">
+                    <div class="section-header">
+                        <h2 class="section-title">Explore Categories</h2>
+                        <p class="section-subtitle">
+                            Choose from our diverse range of subjects and start your learning journey
+                        </p>
+                    </div>
+
+                    <div class="categories-grid">
+                        <div class="category-card">
+                            <div class="category-icon programming">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <h3 class="category-title">Programming</h3>
+                            <p class="category-description">
+                                Learn programming languages, frameworks, and development best practices.
+                            </p>
+                            <div class="category-stats">
+                                <span>120 Courses</span>
+                                <span>Beginner</span>
+                            </div>
+                        </div>
+
+                        <div class="category-card">
+                            <div class="category-icon design">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <h3 class="category-title">Design</h3>
+                            <p class="category-description">
+                                Master design principles, tools, and creative workflows.
+                            </p>
+                            <div class="category-stats">
+                                <span>85 Courses</span>
+                                <span>Creative</span>
+                            </div>
+                        </div>
+
+                        <div class="category-card">
+                            <div class="category-icon marketing">
+                                <i class="fas fa-bullhorn"></i>
+                            </div>
+                            <h3 class="category-title">Marketing</h3>
+                            <p class="category-description">
+                                Digital marketing strategies, social media, and brand building.
+                            </p>
+                            <div class="category-stats">
+                                <span>95 Courses</span>
+                                <span>Business</span>
+                            </div>
+                        </div>
+
+                        <div class="category-card">
+                            <div class="category-icon business">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <h3 class="category-title">Business</h3>
+                            <p class="category-description">
+                                Entrepreneurship, management, and business development skills.
+                            </p>
+                            <div class="category-stats">
+                                <span>78 Courses</span>
+                                <span>Expert</span>
+                            </div>
+                        </div>
+
+                        <div class="category-card">
+                            <div class="category-icon data-science">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 class="category-title">Data Science</h3>
+                            <p class="category-description">
+                                Analytics, machine learning, and data visualization techniques.
+                            </p>
+                            <div class="category-stats">
+                                <span>67 Courses</span>
+                                <span>Expert</span>
+                            </div>
+                        </div>
+
+                        <div class="category-card">
+                            <div class="category-icon ai">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h3 class="category-title">AI</h3>
+                            <p class="category-description">
+                                Artificial intelligence, deep learning, and neural networks.
+                            </p>
+                            <div class="category-stats">
+                                <span>45 Courses</span>
+                                <span>Expert</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="cta-section">
+                <div class="cta-container">
+                    <h2 class="cta-title">Ready to Transform Your Career?</h2>
+                    <p class="cta-subtitle">
+                        Join thousands of learners who are already advancing their skills with our
+                        comprehensive courses.
+                    </p>
+                    <a href="#trial" class="btn btn-white btn-large">Start Your Free Trial</a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <div class="logo" style="margin-bottom: 1rem;">
+                            <div class="logo-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            Learnify
+                        </div>
+                        <p>Empowering learners worldwide with high-quality educational content and expert instruction.</p>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4>Academy</h4>
+                        <ul class="footer-links">
+                            <li><a href="#about">About Us</a></li>
+                            <li><a href="#courses">Courses</a></li>
+                            <li><a href="#instructors">Instructors</a></li>
+                            <li><a href="#pricing">Pricing</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4>Support</h4>
+                        <ul class="footer-links">
+                            <li><a href="#help">Help Center</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                            <li><a href="#community">Community</a></li>
+                            <li><a href="#blog">Blog</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4>Company</h4>
+                        <ul class="footer-links">
+                            <li><a href="#careers">Careers</a></li>
+                            <li><a href="#press">Press</a></li>
+                            <li><a href="#privacy">Privacy Policy</a></li>
+                            <li><a href="#terms">Terms</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>© 2024 Learnify. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </h:body>
+</html>

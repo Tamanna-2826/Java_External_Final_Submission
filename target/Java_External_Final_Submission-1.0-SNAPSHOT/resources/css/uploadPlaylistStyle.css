@@ -1,0 +1,24 @@
+.upload-card {
+    max-width: 600px;
+    margin: 30px auto;
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.upload-card h2 {
+    text-align: center;
+    color: #4e54c8;
+}
+.ui-panel, .ui-inputfield, .ui-selectonemenu, .ui-selectcheckboxmenu {
+    width: 100% !important;
+    margin-bottom: 15px;
+}
+.ui-commandbutton {
+    width: 100%;
+    background-color: #4e54c8;
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+}

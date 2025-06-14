@@ -1,0 +1,175 @@
+/* Admin Login Page Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.logo-section {
+    margin-bottom: 30px;
+}
+
+.logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 24px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+.logo i {
+    margin-right: 8px;
+    font-size: 20px;
+}
+
+.welcome-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    margin: 20px 0 10px 0;
+}
+
+.welcome-subtitle {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.admin-section {
+    margin-bottom: 30px;
+}
+
+.admin-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    color: white;
+    font-size: 24px;
+}
+
+.admin-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.admin-subtitle {
+    color: #666;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+/* PrimeFaces Input Field Styling */
+.ui-inputfield {
+    width: 100% !important;
+    padding: 12px 16px !important;
+    border: 2px solid #e1e5e9 !important;
+    border-radius: 8px !important;
+    font-size: 16px !important;
+    transition: all 0.3s ease !important;
+    box-sizing: border-box !important;
+}
+
+.ui-inputfield:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    outline: none !important;
+}
+
+.ui-inputfield::placeholder {
+    color: #999 !important;
+}
+
+/* PrimeFaces Button Styling */
+.login-button {
+    width: 100% !important;
+    padding: 14px !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    color: white !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    margin-bottom: 20px !important;
+}
+
+.login-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3) !important;
+}
+
+.login-button:active {
+    transform: translateY(0) !important;
+}
+
+.terms-text {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.terms-text a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.terms-text a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .login-container {
+        margin: 20px;
+        padding: 30px 20px;
+    }
+    
+    .welcome-title {
+        font-size: 24px;
+    }
+    
+    .admin-title {
+        font-size: 20px;
+    }
+}
