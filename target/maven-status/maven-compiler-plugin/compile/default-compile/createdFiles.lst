@@ -1,3 +1,4 @@
+Utilities\VideoDurationCalculator.class
 Filters\JwtAuthenticationFilter.class
 CDI\CategoryBean.class
 Entities\Likes.class
