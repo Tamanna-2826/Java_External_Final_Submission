@@ -15,12 +15,15 @@ Entities\Videos.class
 CDI\LoginBean.class
 Enums\UserRole$1.class
 com\mycompany\java_external_final_submission\resources\JakartaEE10Resource.class
+CDI\uploaderBean$VideoDisplayModel.class
+EJB\VideoBean.class
 EJB\CategoryBeanLocal.class
 Entities\Categories.class
 Entities\Reports.class
 Entities\WatchHistory.class
 Entities\Comments.class
 CDI\LoginBean$1.class
+CDI\uploaderBean.class
 Enums\UserRole.class
 Services\UserService.class
 com\mycompany\java_external_final_submission\JakartaRestConfiguration.class
