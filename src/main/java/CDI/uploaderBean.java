@@ -334,39 +334,6 @@ public class uploaderBean implements Serializable {
             return null;
         }
     }
-
-//    private String saveUploadedFile(UploadedFile file) {
-//        try {
-//            // Create uploads directory if it doesn't exist
-//            String uploadDir = "/uploads/videos/"; // Configure this path
-//            Path uploadPath = Paths.get(uploadDir);
-//            if (!Files.exists(uploadPath)) {
-//                Files.createDirectories(uploadPath);
-//            }
-//
-//            // Generate unique filename
-//            String originalFileName = file.getFileName();
-//            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-//            String uniqueFileName = UUID.randomUUID().toString() + extension;
-//
-//            // Save file
-//            Path filePath = uploadPath.resolve(uniqueFileName);
-//            try (InputStream input = file.getInputStream(); FileOutputStream output = new FileOutputStream(filePath.toFile())) {
-//
-//                byte[] buffer = new byte[1024];
-//                int length;
-//                while ((length = input.read(buffer)) > 0) {
-//                    output.write(buffer, 0, length);
-//                }
-//            }
-//
-//            return uploadDir + uniqueFileName;
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
     private String generateThumbnailPath(String videoPath) {
         // Generate thumbnail path based on video path
         // You might want to implement actual thumbnail generation here
