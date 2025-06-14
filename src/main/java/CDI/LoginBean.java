@@ -27,7 +27,7 @@ import java.util.Map;
 @Named(value = "loginBean")
 @SessionScoped
 public class LoginBean implements Serializable {
-
+//This is COmment to check git
     private static final long serialVersionUID = 1L;
 
     // Form fields
