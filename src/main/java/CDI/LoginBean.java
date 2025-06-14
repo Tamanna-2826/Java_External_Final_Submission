@@ -28,7 +28,8 @@ import java.util.Map;
 @SessionScoped
 public class LoginBean implements Serializable {
 //This is COmment to check git
-        private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 1L;
 
     // Form fields
     private String email;
@@ -129,6 +130,8 @@ public class LoginBean implements Serializable {
             System.out.println("User : " + user);
 
             if (user != null && user.getIsActive()) {
+                System.out.println("Entered Password: " + password); // Only for debug
+                System.out.println("Stored Password Hash: " + user.getPasswordHash()); // Only for debug
                 if (PasswordUtil.verifyPassword(password, user.getPasswordHash())) {
                     return user;
                 }
@@ -243,7 +246,7 @@ public class LoginBean implements Serializable {
             // Add logout message
             addInfoMessage("You have been logged out successfully");
 
-            return "login?faces-redirect=true";
+            return "adminLogin?faces-redirect=true";
 
         } catch (Exception e) {
             e.printStackTrace();

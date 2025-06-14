@@ -9,6 +9,7 @@ import Entities.Categories;
 import Entities.Playlists;
 import Entities.Users;
 import Entities.Videos;
+import Utilities.ThumbnailUtil;
 import Utilities.VideoDurationCalculator;
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
@@ -95,6 +96,7 @@ public class uploaderBean implements Serializable {
             loadPlaylists();
 //            loadCategories();
 //            createViewsChart();
+
         }
     }
 
@@ -142,7 +144,7 @@ public class uploaderBean implements Serializable {
             Map<String, Object> stats = videoService.getVideoStatistics(video);
             displayModel.setLikesCount(((Long) stats.get("likes")).intValue());
             displayModel.setCommentsCount(((Long) stats.get("comments")).intValue());
-
+            displayModel.setSelected(selectedVideo != null && video.equals(selectedVideo));
             videoDisplayList.add(displayModel);
         }
     }
@@ -178,6 +180,7 @@ public class uploaderBean implements Serializable {
 
     // Video Upload Method
     public void uploadVideo() {
+        Logger logger = LoggerFactory.getLogger(uploaderBean.class);
         try {
             if (uploadedFile == null || uploadedFile.getSize() == 0) {
                 showMessage("Error", "Please select a video file to upload.", FacesMessage.SEVERITY_ERROR);
@@ -200,46 +203,79 @@ public class uploaderBean implements Serializable {
                 showMessage("Error", "Failed to save video file.", FacesMessage.SEVERITY_ERROR);
                 return;
             }
+            String fullVideoPath = getFullFilePath();
             // Verify file exists
-            File videoFile = new File(getFullFilePath());
-            Logger logger = LoggerFactory.getLogger(uploaderBean.class);
-
-            logger.info("Attempting to calculate duration for file: {}", getFullFilePath());
+            File videoFile = new File(fullVideoPath);
+            logger.info("Attempting to calculate duration for file: {}", fullVideoPath);
             if (!videoFile.exists() || !videoFile.canRead()) {
-                logger.error("File does not exist or is not readable: {}", getFullFilePath());
+                logger.error("File does not exist or is not readable: {}", fullVideoPath);
                 showMessage("Error", "Saved file is not accessible.", FacesMessage.SEVERITY_ERROR);
-                Files.deleteIfExists(Paths.get(getFullFilePath()));
+                Files.deleteIfExists(Paths.get(fullVideoPath));
                 return;
             }
-// Calculate video duration using Humble Video
-            int durationInSeconds = VideoDurationCalculator.getVideoDurationUsingHumbleVideo(getFullFilePath());
+
+            // Calculate video duration using Humble Video
+            int durationInSeconds = VideoDurationCalculator.getVideoDurationUsingHumbleVideo(fullVideoPath);
             if (durationInSeconds < 0) {
+                logger.error("Failed to calculate duration for: {}", fullVideoPath);
                 showMessage("Error", "Failed to calculate video duration. Please try another file.", FacesMessage.SEVERITY_ERROR);
+                Files.deleteIfExists(Paths.get(fullVideoPath));
                 return;
             }
+
+            // Generate thumbnail path
+            Path videoPath = Paths.get(fullVideoPath);
+            String videoFileName = videoPath.getFileName().toString();
+            String thumbnailFileName = videoFileName.replace(".mp4", ".jpg");
+            Path thumbnailDir = videoPath.getParent().getParent().resolve("thumbnails");
+            String absoluteThumbnailPath = thumbnailDir.resolve(thumbnailFileName).toString();
+            logger.info("Thumbnail will be saved at: {}", absoluteThumbnailPath);
+
+            // Generate thumbnail
+            boolean thumbnailGenerated = ThumbnailUtil.generateThumbnail(fullVideoPath, absoluteThumbnailPath);
+            if (!thumbnailGenerated) {
+                logger.error("Failed to generate thumbnail for: {}", fullVideoPath);
+                showMessage("Error", "Failed to generate thumbnail.", FacesMessage.SEVERITY_ERROR);
+                Files.deleteIfExists(Paths.get(fullVideoPath));
+                return;
+            }
+
+            File thumbCheck = new File(absoluteThumbnailPath);
+            if (!thumbCheck.exists()) {
+                logger.error("Thumbnail file not found after generation: {}", absoluteThumbnailPath);
+                showMessage("Error", "Thumbnail file missing after creation.", FacesMessage.SEVERITY_ERROR);
+                Files.deleteIfExists(Paths.get(fullVideoPath));
+                return;
+            }
+
             // Create video entity
             Videos video = new Videos();
             video.setTitle(videoTitle.trim());
             video.setDescription(videoDescription != null ? videoDescription.trim() : "");
             video.setVideourl(filePath);
-            video.setThumbnailurl(generateThumbnailPath(filePath));
+            video.setThumbnailurl("/uploads/thumbnails/" + thumbnailFileName);
             video.setUploaddate(new Date());
             video.setViewscount(0);
-            video.setDuration(durationInSeconds); // You might want to calculate this from the video file
-            video.setQuality("HD"); // Default quality
-            video.setStatus("completed"); // Initial status
+            video.setDuration(durationInSeconds);
+            video.setQuality("HD");
+            video.setStatus("published");
             video.setIspremium(isPremium);
             video.setUserID(currentUser);
 
-            System.out.println("VIDEO : " + video);
+            logger.info("VIDEO: {}", video);
 
             // Find and set category
             Categories category = videoService.findCategoryByName(videoCategory);
-            System.out.println("CATEGORY : " + category);
+            logger.info("CATEGORY: {}", category);
 
-            if (category != null) {
-                video.setCategoryID(category);
+            if (category == null) {
+                logger.error("Category not found: {}", videoCategory);
+                showMessage("Error", "Category '" + videoCategory + "' not found.", FacesMessage.SEVERITY_ERROR);
+                Files.deleteIfExists(Paths.get(fullVideoPath));
+                return;
             }
+
+            video.setCategoryID(category);
 
             // Save video
             videoService.createVideo(video);
@@ -254,7 +290,7 @@ public class uploaderBean implements Serializable {
             showMessage("Success", "Video uploaded successfully!", FacesMessage.SEVERITY_INFO);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Upload failed", e);
             showMessage("Error", "An error occurred while uploading the video: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
@@ -334,16 +370,153 @@ public class uploaderBean implements Serializable {
             return null;
         }
     }
+
     private String generateThumbnailPath(String videoPath) {
         // Generate thumbnail path based on video path
         // You might want to implement actual thumbnail generation here
         return videoPath.replace("/videos/", "/thumbnails/").replace(".mp4", ".jpg");
     }
 
+//    public void editVideo(Videos video) {
+//                System.out.println("V T E : "+video);
+//
+//        selectedVideo = video;
+//        // Navigate to edit page or open edit dialog
+//        showMessage("Info", "Edit functionality to be implemented.", FacesMessage.SEVERITY_INFO);
+//    }
     public void editVideo(Videos video) {
-        selectedVideo = video;
-        // Navigate to edit page or open edit dialog
-        showMessage("Info", "Edit functionality to be implemented.", FacesMessage.SEVERITY_INFO);
+        System.out.println("Editing video: {}" + video);
+        Logger logger = LoggerFactory.getLogger(uploaderBean.class);
+
+        try {
+            logger.info("Editing video: {}", video);
+            this.selectedVideo = video; // Directly use the selected video
+            // Open the edit dialog
+            FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add("PF('editDialog').show();");
+        } catch (Exception e) {
+            logger.error("Error preparing video for edit: {}", video, e);
+            showMessage("Error", "Failed to load video for editing: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
+    }
+
+    public void saveEditedVideo() {
+        Logger logger = LoggerFactory.getLogger(uploaderBean.class);
+
+        try {
+            if (selectedVideo == null) {
+                logger.error("No video selected for editing");
+                showMessage("Error", "No video selected for editing.", FacesMessage.SEVERITY_ERROR);
+                return;
+            }
+
+            // Validate required fields
+            if (selectedVideo.getTitle() == null || selectedVideo.getTitle().trim().isEmpty()) {
+                showMessage("Error", "Video title is required.", FacesMessage.SEVERITY_ERROR);
+                return;
+            }
+
+            // Validate and set category
+            String categoryName = selectedVideo.getCategoryID() != null ? selectedVideo.getCategoryID().getCategoryName() : null;
+            if (categoryName == null || categoryName.trim().isEmpty()) {
+                showMessage("Error", "Please select a category.", FacesMessage.SEVERITY_ERROR);
+                return;
+            }
+
+            Categories category = videoService.findCategoryByName(categoryName);
+            if (category == null) {
+                logger.error("Category not found: {}", categoryName);
+                showMessage("Error", "Category '" + categoryName + "' not found.", FacesMessage.SEVERITY_ERROR);
+                return;
+            }
+            selectedVideo.setCategoryID(category);
+
+            // Handle video file replacement if a new file is uploaded
+            if (uploadedFile != null && uploadedFile.getSize() > 0) {
+                // Delete old video and thumbnail files
+                String oldVideoPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(selectedVideo.getVideourl());
+                String oldThumbnailPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(selectedVideo.getThumbnailurl());
+                Files.deleteIfExists(Paths.get(oldVideoPath));
+                Files.deleteIfExists(Paths.get(oldThumbnailPath));
+
+                // Save new video file
+                String filePath = saveUploadedFile(uploadedFile);
+                if (filePath == null) {
+                    showMessage("Error", "Failed to save new video file.", FacesMessage.SEVERITY_ERROR);
+                    return;
+                }
+                String fullVideoPath = getFullFilePath();
+
+                File videoFile = new File(fullVideoPath);
+                if (!videoFile.exists() || !videoFile.canRead()) {
+                    logger.error("File does not exist or is not readable: {}", fullVideoPath);
+                    showMessage("Error", "Saved file is not accessible.", FacesMessage.SEVERITY_ERROR);
+                    Files.deleteIfExists(Paths.get(fullVideoPath));
+                    return;
+                }
+
+                int durationInSeconds = VideoDurationCalculator.getVideoDurationUsingHumbleVideo(fullVideoPath);
+                if (durationInSeconds < 0) {
+                    logger.error("Failed to calculate duration for: {}", fullVideoPath);
+                    showMessage("Error", "Failed to calculate video duration.", FacesMessage.SEVERITY_ERROR);
+                    Files.deleteIfExists(Paths.get(fullVideoPath));
+                    return;
+                }
+
+                Path videoPath = Paths.get(fullVideoPath);
+                String videoFileName = videoPath.getFileName().toString();
+                String thumbnailFileName = videoFileName.replace(".mp4", ".jpg");
+                Path thumbnailDir = videoPath.getParent().getParent().resolve("thumbnails");
+                String absoluteThumbnailPath = thumbnailDir.resolve(thumbnailFileName).toString();
+
+                boolean thumbnailGenerated = ThumbnailUtil.generateThumbnail(fullVideoPath, absoluteThumbnailPath);
+                if (!thumbnailGenerated) {
+                    logger.error("Failed to generate thumbnail for: {}", fullVideoPath);
+                    showMessage("Error", "Failed to generate thumbnail.", FacesMessage.SEVERITY_ERROR);
+                    Files.deleteIfExists(Paths.get(fullVideoPath));
+                    return;
+                }
+
+                File thumbCheck = new File(absoluteThumbnailPath);
+                if (!thumbCheck.exists()) {
+                    logger.error("Thumbnail file not found after generation: {}", absoluteThumbnailPath);
+                    showMessage("Error", "Thumbnail file missing after creation.", FacesMessage.SEVERITY_ERROR);
+                    Files.deleteIfExists(Paths.get(fullVideoPath));
+                    return;
+                }
+
+                // Update video paths and duration
+                selectedVideo.setVideourl(filePath);
+                selectedVideo.setThumbnailurl("/uploads/thumbnails/" + thumbnailFileName);
+                selectedVideo.setDuration(durationInSeconds);
+            }
+
+            // Ensure description is not null
+            if (selectedVideo.getDescription() == null) {
+                selectedVideo.setDescription("");
+            }
+
+            // Update the video in the database
+            videoService.updateVideo(selectedVideo);
+            logger.info("Video updated successfully: {}", selectedVideo);
+
+            // Refresh the DataTable and dashboard
+            loadVideos();
+            loadDashboardData();
+
+            // Close the dialog
+            FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add("PF('editDialog').hide();");
+
+            // Show success message
+            showMessage("Success", "Video updated successfully!", FacesMessage.SEVERITY_INFO);
+
+            // Clear selection and uploaded file
+            selectedVideo = null;
+            uploadedFile = null;
+
+        } catch (Exception e) {
+            logger.error("Error updating video: {}", selectedVideo, e);
+            showMessage("Error", "Error updating video: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
     }
 
     public void viewAnalytics(Videos video) {
@@ -353,7 +526,11 @@ public class uploaderBean implements Serializable {
     }
 
     public void deleteVideo(Videos video) {
+        System.out.println("V T D : " + video);
+        Logger logger = LoggerFactory.getLogger(uploaderBean.class);
+
         try {
+            logger.info("VIDEO To del : " + video);
             videoService.deleteVideo(video);
             loadDashboardData();
             loadVideos();
@@ -481,6 +658,14 @@ public class uploaderBean implements Serializable {
         return categories;
     }
 
+    public Videos getSelectedVideo() {
+        return selectedVideo;
+    }
+
+    public void setSelectedVideo(Videos selectedVideo) {
+        this.selectedVideo = selectedVideo;
+    }
+
     // Inner class for display model
     public static class VideoDisplayModel implements Serializable {
 
@@ -490,6 +675,16 @@ public class uploaderBean implements Serializable {
         private String formattedUploadDate;
         private int likesCount;
         private int commentsCount;
+        private boolean isSelected; // New field to track if this video is the selected one
+
+        // Getter and Setter for isSelected
+        public boolean isSelected() {
+            return isSelected;
+        }
+
+        public void setSelected(boolean selected) {
+            this.isSelected = selected;
+        }
 
         // Getters and Setters
         public Videos getVideo() {
@@ -509,6 +704,7 @@ public class uploaderBean implements Serializable {
         }
 
         public String getThumbnailUrl() {
+            String thumbnailDirPath = "D:/payara6/glassfish/domains/domain1/webapps";
             return video.getThumbnailurl();
         }
 

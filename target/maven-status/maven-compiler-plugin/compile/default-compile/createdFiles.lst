@@ -15,6 +15,7 @@ Entities\Users.class
 Entities\Videos.class
 CDI\LoginBean.class
 Enums\UserRole$1.class
+Utilities\ThumbnailUtil.class
 com\mycompany\java_external_final_submission\resources\JakartaEE10Resource.class
 CDI\uploaderBean$VideoDisplayModel.class
 EJB\VideoBean.class
