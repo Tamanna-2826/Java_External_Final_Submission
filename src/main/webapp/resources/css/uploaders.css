@@ -1,0 +1,128 @@
+/* Page Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+}
+
+.page-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.search-bar {
+    width: 300px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.search-bar:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Uploader Table */
+.uploader-table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+}
+
+.ui-datatable-tablewrapper {
+    overflow-x: auto;
+}
+
+.ui-datatable thead th {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.ui-datatable tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    color: #333;
+}
+
+.ui-datatable tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.action-column {
+    text-align: center;
+}
+
+.view-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.view-btn:hover {
+    background-color: #218838;
+}
+
+/* Uploader Details Dialog */
+.uploader-details-dialog {
+    width: 600px;
+    max-width: 90%;
+}
+
+.uploader-info-grid {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.uploader-info-grid td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.uploader-info-grid td:first-child {
+    font-weight: bold;
+    color: #555;
+    width: 40%;
+}
+
+.videos-table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.videos-table thead th {
+    background-color: #007bff;
+    color: white;
+    padding: 8px;
+}
+
+.videos-table tbody td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.close-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+}
+
+.close-btn:hover {
+    background-color: #c82333;
+}

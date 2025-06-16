@@ -9,6 +9,7 @@ import Enums.UserRole;
 import Services.JwtService;
 import Services.UserService;
 import Utilities.PasswordUtil;
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Named;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -18,6 +19,7 @@ import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,12 +45,92 @@ public class LoginBean implements Serializable {
     private String jwtToken;
     private boolean isAuthenticated = false;
     private String actionType = "login";
+    private String percentageChange;
 
     @Inject
     private UserService userService;
 
     @Inject
     private JwtService jwtService;
+
+    // New fields for storing users by role
+    private List<Users> uploaders;
+    private List<Users> users;
+    // New fields for counts
+    private long uploaderCount;
+    private long userCount;
+    private long totalUserCount;
+
+    public LoginBean() {
+//        refreshCounts();
+    }
+
+    @PostConstruct
+    public void init() {
+        refreshCounts(); // Call refreshCounts after injection
+    }
+
+    public void refreshCounts() {
+        try {
+            if (userService != null) {
+                uploaderCount = userService.countUploaders();
+                userCount = userService.countUsers();
+                totalUserCount = uploaderCount + userCount;
+
+                long previousCount = userService.countTotalUsersPreviousDay();
+                if (previousCount > 0) {
+                    double change = ((double) (totalUserCount - previousCount) / previousCount) * 100;
+                    percentageChange = String.format("%+.1f%% today", change);
+                } else {
+                    percentageChange = "N/A";
+                }
+            } else {
+                uploaderCount = 0;
+                userCount = 0;
+                totalUserCount = 0;
+                percentageChange = "N/A";
+                addErrorMessage("User service not available.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            uploaderCount = 0;
+            userCount = 0;
+            totalUserCount = 0;
+            percentageChange = "N/A";
+            addErrorMessage("Error fetching user counts.");
+        }
+    }
+
+    /**
+     * Fetch all active uploaders
+     */
+    public void fetchUploaders() {
+        try {
+            uploaders = userService.findUsersByRole(UserRole.UPLOADER);
+            if (uploaders == null || uploaders.isEmpty()) {
+                addInfoMessage("No active uploaders found.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            addErrorMessage("Error fetching uploaders.");
+        }
+    }
+
+    /**
+     * Fetch all active users (assuming UserRole.USER exists)
+     */
+    public void fetchUsers() {
+        try {
+            users = userService.findUsersByRole(UserRole.USER);
+            if (users == null || users.isEmpty()) {
+                addInfoMessage("No active users found.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            addErrorMessage("Error fetching users.");
+        }
+    }
 
     /**
      * Main login method for both Admin and Uploader
@@ -88,7 +170,7 @@ public class LoginBean implements Serializable {
 
             // Set JWT in HTTP header
             setJwtInResponse(token);
-
+            refreshCounts();
             // Navigate based on role
             return getNavigationOutcome(user.getRole());
 
@@ -301,6 +383,40 @@ public class LoginBean implements Serializable {
         }
     }
 
+    public String getPercentageChange() {
+        return percentageChange;
+    }
+
+    public void setPercentageChange(String perChange) {
+        this.percentageChange = perChange;
+    }
+
+    // New getters for counts
+    public void setUploaderCount(long uploaders) {
+        this.uploaderCount = uploaders;
+    }
+
+    public void setUserCount(long users) {
+        this.userCount = users;
+    }
+
+    public long getUploaderCount() {
+        return uploaderCount;
+    }
+
+    public long getUserCount() {
+        return userCount;
+    }
+
+    public void setTotalUserCount(long allUsers) {
+        this.totalUserCount = allUsers;
+    }
+    // New getter for total count
+
+    public long getTotalUserCount() {
+        return totalUserCount;
+    }
+
     /**
      * Get current user's role for UI rendering
      */
@@ -339,6 +455,15 @@ public class LoginBean implements Serializable {
     }
 
     // Getters and Setters
+    // Getters for the new fields
+    public List<Users> getUploaders() {
+        return uploaders;
+    }
+
+    public List<Users> getUsers() {
+        return users;
+    }
+
     public String getEmail() {
         return email;
     }

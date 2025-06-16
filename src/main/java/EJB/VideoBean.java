@@ -15,6 +15,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -243,8 +245,15 @@ public class VideoBean {
 
     // Get video statistics
     public Map<String, Object> getVideoStatistics(Videos video) {
+        System.out.println("VIDEO Statistics: "+video);
         Map<String, Object> stats = new HashMap<>();
 
+         if (video == null) {
+            stats.put("likes", 0L);
+            stats.put("views", 0);
+            stats.put("comments", 0L);
+            return stats;
+        }
         // Get like count
         TypedQuery<Long> likeQuery = em.createQuery(
                 "SELECT COUNT(l) FROM Likes l WHERE l.videoID = :video",
@@ -270,5 +279,42 @@ public class VideoBean {
     public void incrementViewCount(Videos video) {
         video.setViewscount(video.getViewscount() + 1);
         em.merge(video);
+    }
+    // New method to count total videos
+
+    public long countTotalVideos() {
+        try {
+            TypedQuery<Long> query = em.createQuery(
+                    "SELECT COUNT(v) FROM Videos v WHERE v.status = :status", Long.class);
+            query.setParameter("status", "published");
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    // New method to count total videos for the previous day
+    public long countTotalVideosPreviousDay() {
+        try {
+            TypedQuery<Long> query = em.createQuery(
+                    "SELECT COUNT(v) FROM Videos v WHERE v.status = :status AND v.uploaddate < :startOfDay", Long.class);
+            query.setParameter("status", "published");
+            LocalDateTime startOfDay = LocalDateTime.now(ZoneId.of("Asia/Kolkata")).toLocalDate().atStartOfDay();
+            query.setParameter("startOfDay", Date.from(startOfDay.atZone(ZoneId.of("Asia/Kolkata")).toInstant()));
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    // Get all videos
+
+    public List<Videos> getAllVideos() {
+        TypedQuery<Videos> query = em.createQuery(
+                "SELECT v FROM Videos v ORDER BY v.uploaddate DESC",
+                Videos.class
+        );
+        return query.getResultList();
     }
 }

@@ -13,6 +13,8 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -306,5 +308,57 @@ public class UserService {
         public long totalUserss;
         public long activeUserss;
         public java.util.Map<UserRole, Long> usersByRole = new java.util.HashMap<>();
+    }
+
+    public List<Users> findUsersByRole(UserRole role) {
+        try {
+            TypedQuery<Users> query = entityManager.createQuery(
+                    "SELECT u FROM Users u WHERE u.role = :role AND u.isActive = true", Users.class);
+            query.setParameter("role", role);
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    // New method to count active uploaders
+
+    public long countUploaders() {
+        try {
+            TypedQuery<Long> query = entityManager.createQuery(
+                    "SELECT COUNT(u) FROM Users u WHERE u.role = :role AND u.isActive = true", Long.class);
+            query.setParameter("role", UserRole.UPLOADER);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    // New method to count active users
+    public long countUsers() {
+        try {
+            TypedQuery<Long> query = entityManager.createQuery(
+                    "SELECT COUNT(u) FROM Users u WHERE u.role = :role AND u.isActive = true", Long.class);
+            query.setParameter("role", UserRole.USER);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    // New method to count total users for the previous month
+    public long countTotalUsersPreviousDay() {
+        try {
+            TypedQuery<Long> query = entityManager.createQuery(
+                    "SELECT COUNT(u) FROM Users u WHERE u.isActive = true AND u.createdAt < :startOfDay", Long.class);
+            LocalDateTime startOfDay = LocalDateTime.now(ZoneId.of("Asia/Kolkata")).toLocalDate().atStartOfDay();
+            query.setParameter("startOfDay", Date.from(startOfDay.atZone(ZoneId.of("Asia/Kolkata")).toInstant()));
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

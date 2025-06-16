@@ -37,7 +37,7 @@
 
                 <div class="sidebar-menu">
                     <p:menu model="#{adminMenuBean.menuModel}" styleClass="custom-menu"/>
-                    
+
                     <!-- Alternative static menu -->
                     <ul class="menu-list">
                         <li class="menu-item">
@@ -48,18 +48,25 @@
                             </h:link>
                         </li>
                         <li class="menu-item">
-                            <h:commandLink action="users" styleClass="menu-link">
+                            <h:link outcome="uploaders.xhtml" styleClass="menu-link">
                                 <i class="fas fa-users menu-icon"></i>
-                                <span>Users</span>
-                                <span class="menu-badge">15.2K</span>
-                            </h:commandLink>
+                                <span>Uploaders</span>
+                                <span class="menu-badge">  #{loginBean.uploaderCount >= 1000 ? (loginBean.uploaderCount / 1000.0) + 'K' : loginBean.uploaderCount}</span>
+                            </h:link>
                         </li>
                         <li class="menu-item">
-                            <h:commandLink action="videos" styleClass="menu-link">
+                            <h:link outcome="users.xhtml" styleClass="menu-link">
+                                <i class="fas fa-users menu-icon"></i>
+                                <span>Users</span>
+                                <span class="menu-badge">#{loginBean.userCount >= 1000 ? (loginBean.userCount / 1000.0) + 'K' : loginBean.userCount}</span>
+                            </h:link>
+                        </li>
+                        <li class="menu-item">
+                            <h:link outcome="videos.xhtml" styleClass="menu-link">
                                 <i class="fas fa-video menu-icon"></i>
                                 <span>Videos</span>
-                                <span class="menu-badge">2.8K</span>
-                            </h:commandLink>
+                                <span class="menu-badge">#{uploaderBean.totalVideoCount}</span>
+                            </h:link>
                         </li>
                         <li class="menu-item">
                             <h:commandLink action="playlists" styleClass="menu-link">
@@ -72,7 +79,7 @@
                             <h:link outcome="categories.xhtml" styleClass="menu-link">
                                 <i class="fas fa-tags menu-icon"></i>
                                 <span>Categories</span>
-                                <span class="menu-badge">10</span>
+                                <span class="menu-badge">#{categoryBean.totalCategories}</span>
                             </h:link>
                         </li>
                         <li class="menu-item">
@@ -130,23 +137,23 @@
                                     <i class="fas fa-users"></i>
                                 </div>
                                 <div class="stat-info">
-                                    <h3>15,240</h3>
+                                    <h3>#{loginBean.totalUserCount}</h3>
                                     <p>Total Users</p>
-                                    <span class="stat-change">+15% this month</span>
+                                    <span class="stat-change">#{loginBean.percentageChange}</span>
                                 </div>
                             </div>
-                            
+
                             <div class="stat-card stat-videos">
                                 <div class="stat-icon">
                                     <i class="fas fa-video"></i>
                                 </div>
                                 <div class="stat-info">
-                                    <h3>2,847</h3>
+                                    <h3>#{uploaderBean.totalVideoCount}</h3>
                                     <p>Total Videos</p>
-                                    <span class="stat-change">+8% today</span>
+                                    <span class="stat-change">#{uploaderBean.videoPercentageChange}</span>
                                 </div>
                             </div>
-                            
+
                             <div class="stat-card stat-views">
                                 <div class="stat-icon">
                                     <i class="fas fa-eye"></i>
@@ -157,7 +164,7 @@
                                     <span class="stat-change">+13% this month</span>
                                 </div>
                             </div>
-                            
+
                             <div class="stat-card stat-engagement">
                                 <div class="stat-icon">
                                     <i class="fas fa-heart"></i>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Uploaders Management</title>
+        <h:outputStylesheet name="css/uploaders.css"/>
+    </h:head>
+    <h:body>
+        <h:form id="uploadersForm">
+            <!-- Header with Search -->
+            <div class="page-header">
+                <h2>Uploaders Management</h2>
+                <p:inputText id="searchInput" value="#{uploaderListingBean.searchTerm}" 
+                             placeholder="Search by name or email..."
+                             styleClass="search-bar">
+                    <p:ajax event="keyup" listener="#{uploaderListingBean.searchUploaders()}"
+                            update="uploadersTable"/>
+                </p:inputText>
+            </div>
+
+            <!-- Uploaders Table -->
+            <p:dataTable id="uploadersTable" value="#{uploaderListingBean.filteredUploaders}" var="uploader"
+                         styleClass="uploader-table" emptyMessage="No uploaders found.">
+                <p:column headerText="Name">
+                    <h:outputText value="#{uploader.fullName}"/>
+                </p:column>
+                <p:column headerText="Email">
+                    <h:outputText value="#{uploader.email}"/>
+                </p:column>
+                <p:column headerText="Joined Date">
+                    <h:outputText value="#{uploader.createdAt}">
+                        <f:convertDateTime pattern="MMM dd, yyyy"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Actions" styleClass="action-column">
+                    <p:commandButton value="View Details" styleClass="view-btn"
+                                     action="#{uploaderListingBean.viewUploaderDetails(uploader)}"
+                                     update=":uploadersForm:uploaderDetailsDialog"/>
+                </p:column>
+            </p:dataTable>
+
+            <!-- Uploader Details Dialog -->
+            <p:dialog id="uploaderDetailsDialog" header="Uploader Details" widgetVar="uploaderDetailsDialog"
+                      modal="true" styleClass="uploader-details-dialog" resizable="false">
+                <h:panelGrid columns="2" styleClass="uploader-info-grid">
+                    <h:outputLabel value="Name:"/>
+                    <h:outputText value="#{uploaderListingBean.selectedUploader.fullName}"/>
+                    <h:outputLabel value="Email:"/>
+                    <h:outputText value="#{uploaderListingBean.selectedUploader.email}"/>
+                    <h:outputLabel value="Total Videos:"/>
+                    <h:outputText value="#{uploaderListingBean.getTotalVideosForUploader(uploaderListingBean.selectedUploader)}"/>
+                    <h:outputLabel value="Total Views:"/>
+                    <h:outputText value="#{uploaderListingBean.formatViewCountForUploader(uploaderListingBean.getTotalViewsForUploader(uploaderListingBean.selectedUploader).intValue())}"/>
+                    <h:outputLabel value="Total Likes:"/>
+                    <h:outputText value="#{uploaderListingBean.formatViewCountForUploader(uploaderListingBean.getTotalLikesForUploader(uploaderListingBean.selectedUploader).intValue())}"/>
+                    <h:outputLabel value="Total Comments:"/>
+                    <h:outputText value="#{uploaderListingBean.getTotalCommentsForUploader(uploaderListingBean.selectedUploader)}"/>
+                </h:panelGrid>
+
+                <h3>Uploaded Videos</h3>
+                <p:dataTable value="#{uploaderListingBean.uploaderVideos}" var="videoModel" styleClass="videos-table"
+                             emptyMessage="No videos uploaded by this uploader.">
+                    <p:column headerText="Title">
+                        <h:outputText value="#{videoModel.title}"/>
+                    </p:column>
+                    <p:column headerText="Category">
+                        <h:outputText value="#{videoModel.categoryName}"/>
+                    </p:column>
+                    <p:column headerText="Upload Date">
+                        <h:outputText value="#{videoModel.formattedUploadDate}"/>
+                    </p:column>
+                    <p:column headerText="Likes">
+                        <h:outputText value="#{videoModel.likesCount}"/>
+                    </p:column>
+                    <p:column headerText="Comments">
+                        <h:outputText value="#{videoModel.commentsCount}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <p:commandButton value="Close" onclick="PF('uploaderDetailsDialog').hide();" styleClass="close-btn"/>
+            </p:dialog>
+        </h:form>
+    </h:body>
+</html>

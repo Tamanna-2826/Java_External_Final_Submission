@@ -1,0 +1,130 @@
+/* General page styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-header h2 {
+    color: #333;
+    margin: 0;
+}
+
+.search-bar {
+    width: 300px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.search-bar:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* User table styling */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-table th,
+.user-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-table th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.user-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.action-column {
+    text-align: center;
+}
+
+.view-btn {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.view-btn:hover {
+    background-color: #218838;
+}
+
+/* User details dialog styling */
+.user-details-dialog .ui-dialog-content {
+    padding: 20px;
+}
+
+.user-info-grid {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.user-info-grid td {
+    padding: 8px;
+}
+
+.user-info-grid td:first-child {
+    font-weight: bold;
+    color: #555;
+}
+
+.watch-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.watch-history-table th,
+.watch-history-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.watch-history-table th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.watch-history-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.close-btn {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.close-btn:hover {
+    background-color: #c82333;
+}

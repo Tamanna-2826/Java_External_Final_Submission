@@ -436,6 +436,17 @@ body {
     background-color: #e0f0ff !important;
     border: 2px solid #007bff !important;
 }
+.video-action-row {
+    display: block;
+    margin-top: 5px; /* Spacing between actions */
+}
+.action-buttons a {
+    text-decoration: none;
+    color: #007bff; /* Adjust color to match your theme */
+}
+.action-buttons a:hover {
+    text-decoration: underline;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .dashboard-container {

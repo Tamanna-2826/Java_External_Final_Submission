@@ -79,6 +79,8 @@ public class uploaderBean implements Serializable {
     private String videoCategory;
     private String videoTags;
     private boolean isPremium;
+    private long totalVideoCount; // New field for total videos
+    private String videoPercentageChange; // New field for percentage change
 
     // Chart Model
 //    private LineChartModel viewsChartModel;
@@ -127,6 +129,15 @@ public class uploaderBean implements Serializable {
         totalLikes = videoService.formatViewCount(likesCount.intValue());
 
         totalComments = videoService.getTotalCommentsByUploader(currentUser);
+        // Load total video count and percentage change
+        totalVideoCount = videoService.countTotalVideos();
+        long previousVideoCount = videoService.countTotalVideosPreviousDay();
+        if (previousVideoCount > 0) {
+            double change = ((double) (totalVideoCount - previousVideoCount) / previousVideoCount) * 100;
+            videoPercentageChange = String.format("%+.1f%% today", change);
+        } else {
+            videoPercentageChange = "N/A";
+        }
     }
 
     private void loadVideos() {
@@ -298,18 +309,8 @@ public class uploaderBean implements Serializable {
     private String saveUploadedFile(UploadedFile file) {
         Logger logger = LoggerFactory.getLogger(uploaderBean.class);
         try {
-            // Attempt to resolve path within webapp
-            String uploadDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/uploads/videos/");
-            if (uploadDir == null) {
-                // Fallback for development or if getRealPath fails
-                String contextPath = FacesContext.getCurrentInstance().getExternalContext().getContextName();
-                uploadDir = System.getProperty("catalina.base", System.getProperty("user.dir"))
-                        + "/webapps/" + contextPath.replace("/", "") + "/uploads/videos/";
-                logger.warn("getRealPath returned null, falling back to: {}", uploadDir);
-            }
-
-            // Normalize path for Windows
-            uploadDir = Paths.get(uploadDir).normalize().toString();
+            // Use hardcoded path for storing videos
+            String uploadDir = "D:\\Sem 8\\Java_Project\\Java_External_Final_Submission\\src\\main\\webapp\\uploads\\videos\\";
             logger.info("Using upload directory: {}", uploadDir);
 
             // Ensure directory exists
@@ -370,6 +371,81 @@ public class uploaderBean implements Serializable {
             return null;
         }
     }
+//    private String saveUploadedFile(UploadedFile file) {
+//        Logger logger = LoggerFactory.getLogger(uploaderBean.class);
+//        try {
+//            // Attempt to resolve path within webapp
+//            String uploadDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/uploads/videos/");
+//            if (uploadDir == null) {
+//                // Fallback for development or if getRealPath fails
+//                String contextPath = FacesContext.getCurrentInstance().getExternalContext().getContextName();
+//                uploadDir = System.getProperty("catalina.base", System.getProperty("user.dir"))
+//                        + "/webapps/" + contextPath.replace("/", "") + "/uploads/videos/";
+//                logger.warn("getRealPath returned null, falling back to: {}", uploadDir);
+//            }
+//
+//            // Normalize path for Windows
+//            uploadDir = Paths.get(uploadDir).normalize().toString();
+//            logger.info("Using upload directory: {}", uploadDir);
+//
+//            // Ensure directory exists
+//            Path uploadPath = Paths.get(uploadDir);
+//            if (!Files.exists(uploadPath)) {
+//                Files.createDirectories(uploadPath);
+//                logger.info("Created upload directory: {}", uploadPath);
+//            }
+//
+//            // Generate unique filename
+//            String originalFileName = file.getFileName();
+//            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+//            String uniqueFileName = UUID.randomUUID().toString() + extension;
+//
+//            // Save file
+//            Path filePath = uploadPath.resolve(uniqueFileName);
+//            logger.info("Attempting to save file to: {}", filePath.toAbsolutePath().normalize());
+//
+//            long bytesWritten = 0;
+//            try (InputStream input = file.getInputStream(); FileOutputStream output = new FileOutputStream(filePath.toFile())) {
+//                byte[] buffer = new byte[1024];
+//                int length;
+//                while ((length = input.read(buffer)) > 0) {
+//                    output.write(buffer, 0, length);
+//                    bytesWritten += length;
+//                }
+//                output.flush();
+//            }
+//
+//            // Verify file exists and has content
+//            File savedFile = filePath.toFile();
+//            if (!savedFile.exists()) {
+//                logger.error("File was not created: {}", filePath);
+//                FacesContext.getCurrentInstance().addMessage(null,
+//                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "File was not saved to disk."));
+//                return null;
+//            }
+//            if (savedFile.length() != bytesWritten) {
+//                logger.error("File size mismatch: expected {} bytes, but file size is {} bytes", bytesWritten, savedFile.length());
+//                FacesContext.getCurrentInstance().addMessage(null,
+//                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "File was not saved correctly."));
+//                return null;
+//            }
+//
+//            logger.info("Successfully saved file to: {} (size: {} bytes)", filePath, savedFile.length());
+//
+//            // Store absolute path for Humble Video
+//            fullFilePath = filePath.toAbsolutePath().normalize().toString();
+//            logger.info("Absolute path for Humble Video: {}", fullFilePath);
+//
+//            // Return relative path for database
+//            return "/uploads/videos/" + uniqueFileName;
+//
+//        } catch (IOException e) {
+//            logger.error("Failed to save uploaded file: {}", file.getFileName(), e);
+//            FacesContext.getCurrentInstance().addMessage(null,
+//                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to save file: " + e.getMessage()));
+//            return null;
+//        }
+//    }
 
     private String generateThumbnailPath(String videoPath) {
         // Generate thumbnail path based on video path
@@ -568,6 +644,23 @@ public class uploaderBean implements Serializable {
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
         return sdf.format(date);
+    }
+// New getters
+
+    public long getTotalVideoCount() {
+        return totalVideoCount;
+    }
+
+    public void setTotalVideoCount(long totalVideoCounts) {
+        this.totalVideoCount = totalVideoCounts;
+    }
+
+    public void setVideoPercentageChange(String videoPercentageChange) {
+        this.videoPercentageChange = videoPercentageChange;
+    }
+
+    public String getVideoPercentageChange() {
+        return videoPercentageChange;
     }
 
     // Getters and Setters
