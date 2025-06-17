@@ -19,6 +19,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -153,7 +154,17 @@ public class WatchHistory implements Serializable {
 
     @Override
     public String toString() {
-        return "Entities.WatchHistory[ watchID=" + watchID + " ]";
+//        return "Entities.WatchHistory[ watchID=" + watchID + " +  ]";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = (watchedAt != null) ? dateFormat.format(watchedAt) : "null";
+
+        return "WatchHistory{"
+                + "watchID=" + watchID
+                + ", userID=" + userID
+                + ", videoID=" + videoID
+                + ", watchedAt=" + formattedDate
+                + ", watchduration=" + watchduration + " seconds"
+                + ", deviceinfo='" + deviceinfo + '\''
+                + '}';
     }
-    
 }

@@ -171,6 +171,7 @@ public class Videos implements Serializable {
     }
 
     public String getThumbnailurl() {
+        System.out.println("THURL : "+thumbnailurl);
         return thumbnailurl;
     }
 
@@ -300,7 +301,11 @@ public class Videos implements Serializable {
 
     @Override
     public String toString() {
-        return "Entities.Videos[ videoID=" + videoID + " ]";
+        return "Videos{"
+                + "id=" + videoID
+                + ", title='" + title + '\''
+                + ", status='" + status + '\''
+                + '}';
     }
-    
+
 }

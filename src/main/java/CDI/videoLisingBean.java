@@ -66,8 +66,11 @@ public class videoLisingBean implements Serializable {
         filteredVideos = new ArrayList<>();
         String lowerSearchTerm = searchTerm.toLowerCase();
         for (Videos video : videos) {
-            if (video.getTitle().toLowerCase().contains(lowerSearchTerm)
-                    || (video.getUserID() != null && video.getUserID().getFullName().toLowerCase().contains(lowerSearchTerm))) {
+            boolean matchesTitle = video.getTitle().toLowerCase().contains(lowerSearchTerm);
+            boolean matchesUploader = video.getUserID() != null && video.getUserID().getFullName().toLowerCase().contains(lowerSearchTerm);
+            boolean matchesCategory = video.getCategoryID() != null && video.getCategoryID().getCategoryName().toLowerCase().contains(lowerSearchTerm);
+
+            if (matchesTitle || matchesUploader || matchesCategory) {
                 filteredVideos.add(video);
             }
         }
@@ -96,7 +99,7 @@ public class videoLisingBean implements Serializable {
     }
 
     public Map<String, Object> getVideoStatistics(Videos video) {
-        System.out.println("Video in Listing Bean : "+video);
+        System.out.println("Video in Listing Bean : " + video);
         return videoService.getVideoStatistics(video);
     }
 
@@ -144,7 +147,7 @@ public class videoLisingBean implements Serializable {
     }
 
     public String getVideoUrl() {
-        System.out.println("Video URL : "+videoUrl);
+        System.out.println("Video URL : " + videoUrl);
         return videoUrl;
     }
 }

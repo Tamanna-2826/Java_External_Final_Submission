@@ -19,7 +19,7 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>uploaderLogin.jsf</welcome-file>
+        <welcome-file>landing.jsf</welcome-file>
     </welcome-file-list>
     <!-- Add these mappings to resolve font MIME type warnings -->
     <mime-mapping>

@@ -9,6 +9,7 @@ import Entities.PlaylistVideos;
 import Entities.Playlists;
 import Entities.Users;
 import Entities.Videos;
+import Entities.WatchHistory;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.persistence.EntityManager;
@@ -245,10 +246,10 @@ public class VideoBean {
 
     // Get video statistics
     public Map<String, Object> getVideoStatistics(Videos video) {
-        System.out.println("VIDEO Statistics: "+video);
+        System.out.println("VIDEO Statistics: " + video);
         Map<String, Object> stats = new HashMap<>();
 
-         if (video == null) {
+        if (video == null) {
             stats.put("likes", 0L);
             stats.put("views", 0);
             stats.put("comments", 0L);
@@ -262,9 +263,16 @@ public class VideoBean {
         likeQuery.setParameter("video", video);
         Long likeCount = likeQuery.getSingleResult();
 
+        TypedQuery<Long> commentQuery = em.createQuery(
+                "SELECT COUNT(c) FROM Comments c WHERE c.videoID = :videoId",
+                Long.class
+        );
+        commentQuery.setParameter("videoId", video.getVideoID());
+        Long commentCount = commentQuery.getSingleResult();
+
         stats.put("likes", likeCount);
         stats.put("views", video.getViewscount());
-        stats.put("comments", 0L); // Placeholder if Comments entity exists
+        stats.put("comments", commentCount); // Placeholder if Comments entity exists
 
         return stats;
     }
@@ -317,4 +325,30 @@ public class VideoBean {
         );
         return query.getResultList();
     }
+
+    public List<WatchHistory> getWatchHistoryByUser(int userId) {
+        TypedQuery<WatchHistory> query = em.createQuery(
+                "SELECT w FROM WatchHistory w WHERE w.userID = :userId ORDER BY w.watchedAt DESC",
+                WatchHistory.class
+        );
+        query.setParameter("userId", userId);
+        return query.getResultList();
+    }
+
+    public void addWatchHistoryEntry(int userId, int videoId, String deviceinfo) {
+        WatchHistory watchHistory = new WatchHistory();
+        watchHistory.setUserID(userId);
+        watchHistory.setVideoID(videoId);
+        watchHistory.setWatchedAt(new Date());
+        watchHistory.setWatchduration(0); // Initial duration; update later if needed
+        watchHistory.setDeviceinfo(deviceinfo != null ? deviceinfo : "Unknown");
+        em.persist(watchHistory);
+    }
+
+    public List<Videos> getVideosByCategory(int categoryId) {
+        return em.createQuery("SELECT v FROM Videos v WHERE v.category.categoryID = :catId AND v.status = 'published'", Videos.class)
+                .setParameter("catId", categoryId)
+                .getResultList();
+    }
+
 }

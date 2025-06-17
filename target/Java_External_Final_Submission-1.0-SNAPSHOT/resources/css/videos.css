@@ -18,9 +18,14 @@ body {
     margin: 0;
 }
 
+/* Search bar container for icon */
+.search-container {
+    position: relative;
+    display: inline-block;
+}
 .search-bar {
     width: 300px;
-    padding: 8px;
+    padding: 8px 8px 8px 32px; /* Add padding on the left for the icon */
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
@@ -31,7 +36,16 @@ body {
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
-
+/* Add search icon using pseudo-element */
+.search-container::before {
+    content: "\1F50D"; /* Unicode for magnifying glass (search icon) */
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #666;
+}
 /* Video table styling */
 .video-table {
     width: 100%;
@@ -74,8 +88,35 @@ body {
 }
 
 /* Video details dialog styling */
+/* Video details dialog styling */
 .video-details-dialog .ui-dialog-content {
     padding: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 700px; /* Wider dialog for landscape layout */
+    max-width: 90vw;
+    height: 500px;
+}
+
+.video-details-dialog .ui-dialog {
+    width: 750px !important; /* Adjust dialog container width */
+    max-width: 95vw;
+}
+
+.video-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.details-container {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically center the content */
+    align-items: flex-start; /* Ensure horizontal alignment is left */
 }
 
 .video-info-grid {
@@ -85,16 +126,28 @@ body {
 
 .video-info-grid td {
     padding: 8px;
+    vertical-align: top; /* Align text to the top */
+
 }
 
 .video-info-grid td:first-child {
     font-weight: bold;
     color: #555;
+    width: 30%; /* Reserve space for labels */
 }
+.video-info-grid td:nth-child(2) {
 
+    word-break: break-word; /* Ensure long text like the title wraps */
+
+    max-width: 0; /* Prevent overflow by allowing text to wrap */
+}
 video {
     max-width: 100%;
+    width: 100%;
+    height: auto;
+    max-height: 360px; /* Set a max-height to ensure consistent centering */
     margin-bottom: 20px;
+
 }
 
 .close-btn {
@@ -105,6 +158,9 @@ video {
     border-radius: 4px;
     cursor: pointer;
     margin-top: 20px;
+    align-self: flex-end; /* Align close button to the right */
+
+
 }
 
 .close-btn:hover {

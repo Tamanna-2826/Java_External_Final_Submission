@@ -12,12 +12,14 @@
             <!-- Header with Search -->
             <div class="page-header">
                 <h2>Videos Management</h2>
-                <p:inputText id="searchInput" value="#{videoLisingBean.searchTerm}" 
-                             placeholder="Search by title or uploader..."
-                             styleClass="search-bar">
-                    <p:ajax event="keyup" listener="#{videoLisingBean.searchVideos()}"
-                            update="videosTable"/>
-                </p:inputText>
+                <div class="search-container">
+                    <p:inputText id="searchInput" value="#{videoLisingBean.searchTerm}" 
+                                 placeholder="Search"
+                                 styleClass="search-bar">
+                        <p:ajax event="keyup" listener="#{videoLisingBean.searchVideos()}"
+                                update="videosTable"/>
+                    </p:inputText>
+                </div>
             </div>
 
             <!-- Videos Table -->
@@ -49,43 +51,77 @@
             <p:dialog id="videoDetailsDialog" header="Video Details" widgetVar="videoDetailsDialog"
                       modal="true" styleClass="video-details-dialog" resizable="false">
                 <h:panelGroup rendered="#{videoLisingBean.selectedVideo != null}">
-                    <h:panelGrid columns="2" styleClass="video-info-grid">
-                        <h:outputLabel value="Title:"/>
-                        <h:outputText value="#{videoLisingBean.selectedVideo.title}"/>
-                        <h:outputLabel value="Uploader:"/>
-                        <h:outputText value="#{videoLisingBean.selectedVideo.userID.fullName}"/>
-                        <h:outputLabel value="Category:"/>
-                        <h:outputText value="#{videoLisingBean.selectedVideo.categoryID != null ? videoLisingBean.selectedVideo.categoryID.categoryName : 'Uncategorized'}"/>
-                        <h:outputLabel value="Upload Date:"/>
-                        <h:outputText value="#{videoLisingBean.formatDate(videoLisingBean.selectedVideo.uploaddate)}"/>
-                        <h:outputLabel value="Duration:"/>
-                        <h:outputText value="#{videoLisingBean.formatDuration(videoLisingBean.selectedVideo.duration)}"/>
-                        <h:outputLabel value="Views:"/>
-                        <h:outputText value="#{videoLisingBean.formatViewCount(videoLisingBean.selectedVideo.viewscount)}"/>
-                        <h:outputLabel value="Likes:"/>
-                        <h:outputText value="#{videoLisingBean.getVideoStatistics(videoLisingBean.selectedVideo).get('likes')}"/>
-                        <h:outputLabel value="Comments:"/>
-                        <h:outputText value="#{videoLisingBean.getVideoStatistics(videoLisingBean.selectedVideo).get('comments')}"/>
-                        <h:outputLabel value="Status:"/>
-                        <h:outputText value="#{videoLisingBean.selectedVideo.status}"/>
-                    </h:panelGrid>
+                    <div class="video-container">
 
-                    <h3>Watch Video</h3>
-                    <h:panelGrid columns="1">
-<!--                        <h:panelGroup rendered="#{videoLisingBean.videoUrl != null}">
-                            <a href="#{request.contextPath}#{videoLisingBean.videoUrl}" target="_blank">Click here to watch video</a>
-                        </h:panelGroup>-->
-                        <h:panelGroup rendered="#{videoLisingBean.videoUrl != null}">
-                            <video controls="controls" width="640" height="360">
-                                <source src="#{request.contextPath}#{videoLisingBean.videoUrl}" type="video/mp4" />
-                                Your browser does not support the video tag.
-                            </video>                   
-                        </h:panelGroup>
-                        <h:panelGroup rendered="#{videoLisingBean.videoUrl == null}">
-                            <p>Video file not available.</p>
-                        </h:panelGroup>
-                    </h:panelGrid>
-                    <p:commandButton value="Close" onclick="PF('videoDetailsDialog').hide();" styleClass="close-btn"/>
+                        <h3>Watch Video</h3>
+
+                        <h:panelGrid columns="1">
+
+                            <h:panelGroup rendered="#{videoLisingBean.videoUrl != null}">
+
+                                <video controls="controls" width="100%">
+
+                                    <source src="#{request.contextPath}#{videoLisingBean.videoUrl}" type="video/mp4" />
+
+                                    Your browser does not support the video tag.
+
+                                </video>                   
+
+                            </h:panelGroup>
+
+                            <h:panelGroup rendered="#{videoLisingBean.videoUrl == null}">
+
+                                <p>Video file not available.</p>
+
+                            </h:panelGroup>
+
+                        </h:panelGrid>
+
+                    </div>
+
+                    <div class="details-container">
+
+                        <h:panelGrid columns="2" styleClass="video-info-grid">
+
+                            <h:outputLabel value="Title:"/>
+
+                            <h:outputText value="#{videoLisingBean.selectedVideo.title}"/>
+
+                            <h:outputLabel value="Uploader:"/>
+
+                            <h:outputText value="#{videoLisingBean.selectedVideo.userID.fullName}"/>
+
+                            <h:outputLabel value="Category:"/>
+
+                            <h:outputText value="#{videoLisingBean.selectedVideo.categoryID != null ? videoLisingBean.selectedVideo.categoryID.categoryName : 'Uncategorized'}"/>
+
+                            <h:outputLabel value="Upload Date:"/>
+
+                            <h:outputText value="#{videoLisingBean.formatDate(videoLisingBean.selectedVideo.uploaddate)}"/>
+
+                            <h:outputLabel value="Duration:"/>
+
+                            <h:outputText value="#{videoLisingBean.formatDuration(videoLisingBean.selectedVideo.duration)}"/>
+
+                            <h:outputLabel value="Views:"/>
+
+                            <h:outputText value="#{videoLisingBean.formatViewCount(videoLisingBean.selectedVideo.viewscount)}"/>
+
+                            <h:outputLabel value="Likes:"/>
+
+                            <h:outputText value="#{videoLisingBean.getVideoStatistics(videoLisingBean.selectedVideo).get('likes')}"/>
+
+                            <h:outputLabel value="Comments:"/>
+
+                            <h:outputText value="#{videoLisingBean.getVideoStatistics(videoLisingBean.selectedVideo).get('comments')}"/>
+
+                            <h:outputLabel value="Status:"/>
+
+                            <h:outputText value="#{videoLisingBean.selectedVideo.status}"/>
+
+                        </h:panelGrid>
+
+                    </div>
                 </h:panelGroup>
             </p:dialog>
         </h:form>

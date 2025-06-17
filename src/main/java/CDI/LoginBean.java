@@ -6,6 +6,7 @@ package CDI;
 
 import Entities.Users;
 import Enums.UserRole;
+import static Enums.UserRole.UPLOADER;
 import Services.JwtService;
 import Services.UserService;
 import Utilities.PasswordUtil;
@@ -147,10 +148,12 @@ public class LoginBean implements Serializable {
 
             // Authenticate user
             Users user = authenticateUser();
+            System.out.println("Auth USER :  " + user);
             if (user == null) {
                 addErrorMessage("Invalid email or password");
                 return null;
             }
+            System.out.println("User Role Access: " + hasRoleAccess(user));
 
             // Verify role access
             if (!hasRoleAccess(user)) {
@@ -241,7 +244,9 @@ public class LoginBean implements Serializable {
         if ("UPLOADER".equals(selectedRole) && userRole == UserRole.UPLOADER) {
             return true;
         }
-
+        if ("USER".equals(selectedRole) && userRole == UserRole.USER) {
+            return true;
+        }
         return false;
     }
 
@@ -303,8 +308,10 @@ public class LoginBean implements Serializable {
                 return "sidebar?faces-redirect=true";
             case UPLOADER:
                 return "uploaderDashboard?faces-redirect=true";
+            case USER:
+                return "userDashboard?faces-redirect=true";
             default:
-                return "login?faces-redirect=true";
+                return "userLogin?faces-redirect=true";
         }
     }
 
@@ -523,9 +530,8 @@ public class LoginBean implements Serializable {
         }
 
         try {
-            // Default role: UPLOADER (change if needed)
-            userService.createUsers(fullName.trim(), email.trim(), password, UserRole.UPLOADER);
-
+            UserRole role = "USER".equals(selectedRole) ? UserRole.USER : UserRole.UPLOADER;
+            userService.createUsers(fullName.trim(), email.trim(), password, role);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Registration successful. Please login.", null));
 
             // Clear fields and switch to login mode

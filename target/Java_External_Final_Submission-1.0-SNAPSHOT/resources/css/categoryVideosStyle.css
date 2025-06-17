@@ -1,0 +1,23 @@
+.video-card {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 12px;
+    background-color: #f9f9ff;
+    width: 260px;
+    float: left;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+.video-card:hover {
+    transform: scale(1.05);
+}
+.thumbnail {
+    border-radius: 8px;
+    cursor: zoom-in;
+}
+.comment-section {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+}

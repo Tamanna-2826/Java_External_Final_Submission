@@ -11,7 +11,7 @@ package Enums;
 public enum UserRole {
     ADMIN("admin", "System Administrator with full access"),
     UPLOADER("uploader", "Content uploader with limited access"),
-    USER("viewer", "Regular user with basic access");
+    USER("user", "Regular user with basic access");
 
     private final String displayName;
     private final String description;

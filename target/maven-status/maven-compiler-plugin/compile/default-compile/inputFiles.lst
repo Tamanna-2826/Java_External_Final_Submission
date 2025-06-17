@@ -10,9 +10,12 @@ D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\CDI\LoginBean
 D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\com\mycompany\java_external_final_submission\JakartaRestConfiguration.java
 D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\CDI\videoLisingBean.java
 D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\Entities\Videos.java
+D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\EJB\commentBean.java
 D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\Entities\Comments.java
 D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\Test\PasswordTest.java
+D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\CDI\userDashboardBean.java
 D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\CDI\usersListingBean.java
+D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\EJB\LikesBean.java
 D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\Converters\UserRoleConverter.java
 D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\Entities\Reports.java
 D:\Sem 8\Java_Project\Java_External_Final_Submission\src\main\java\Utilities\VideoDurationCalculator.java

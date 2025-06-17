@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <f:view>
+        <f:metadata>
+            <f:viewAction action="#{loginBean.setSelectedRole('USER')}" />
+        </f:metadata>
+        <h:head>
+            <title>User Login - Learnify</title>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+            <h:outputStylesheet name="css/userLoginStyle.css"/>
+        </h:head>
+        <h:body styleClass="login-body">
+            <h:form styleClass="login-form">
+                <a href="landing.xhtml" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+                <div class="logo-section">
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        Learnify
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>Welcome, Learner!</h2>
+                    <div class="role-toggle">
+                        <button type="button" class="active">User</button>
+                    </div>
+                    <div class="action-toggle">
+                        <h:commandButton value="Sign In" action="#{loginBean.setActionType('login')}"
+                                         styleClass="#{loginBean.actionType eq 'login' ? 'active' : ''}">
+                            <f:ajax render="@form" />
+                        </h:commandButton>
+                        <h:commandButton value="Register" action="#{loginBean.setActionType('register')}"
+                                         styleClass="#{loginBean.actionType eq 'register' ? 'active' : ''}">
+                            <f:ajax render="@form" />
+                        </h:commandButton>
+                    </div>
+                    <div class="icon-container">
+                        <i class="login-icon">📚</i>
+                    </div>
+                    <h3>User #{loginBean.actionType eq 'login' ? 'Login' : 'Registration'}</h3>
+                    <h:messages globalOnly="true" styleClass="error-message" />
+                    <h:panelGroup rendered="#{loginBean.actionType eq 'register'}">
+                        <h:outputLabel for="fullName" value="Full Name" />
+                        <h:inputText id="fullName" value="#{loginBean.fullName}" styleClass="input-field" required="true" />
+                    </h:panelGroup>
+                    <h:outputLabel for="email" value="Email" />
+                    <h:inputText id="email" value="#{loginBean.email}" styleClass="input-field" required="true" />
+                    <h:outputLabel for="password" value="Password" />
+                    <h:inputSecret id="password" value="#{loginBean.password}" styleClass="input-field" required="true" />
+                    <h:panelGroup>
+                        <h:commandButton rendered="#{loginBean.actionType eq 'login'}"
+                                         value="Sign In"
+                                         action="#{loginBean.login}"
+                                         styleClass="submit-button" />
+                        <h:commandButton rendered="#{loginBean.actionType eq 'register'}"
+                                         value="Register"
+                                         action="#{loginBean.register}"
+                                         styleClass="submit-button" />
+                    </h:panelGroup>
+                    <div class="terms">
+                        By continuing, you agree to our
+                        <a href="#">Terms of Service</a> and
+                        <a href="#">Privacy Policy</a>
+                    </div>
+                </div>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

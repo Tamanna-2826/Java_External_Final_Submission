@@ -1,5 +1,6 @@
 CDI\usersListingBean.class
 Utilities\VideoDurationCalculator.class
+EJB\LikesBean.class
 Filters\JwtAuthenticationFilter.class
 CDI\CategoryBean.class
 Entities\Likes.class
@@ -13,6 +14,7 @@ Entities\Playlists.class
 CDI\videoLisingBean.class
 Services\UserService$UsersStats.class
 CDI\uploaderListingBean.class
+CDI\userDashboardBean.class
 Utilities\PasswordUtil.class
 Services\JwtService.class
 Entities\Users.class
@@ -31,6 +33,7 @@ Entities\Reports.class
 Entities\WatchHistory.class
 Entities\Comments.class
 CDI\LoginBean$1.class
+EJB\commentBean.class
 CDI\uploaderBean.class
 Enums\UserRole.class
 Services\UserService.class

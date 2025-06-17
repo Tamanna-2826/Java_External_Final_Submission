@@ -19,5 +19,10 @@ public class PasswordTest {
         String plainPassword1 = "Tamanna@123"; // replace with your desired password
         String hashedPassword1 = PasswordUtil.hashPassword(plainPassword1);
         System.out.println("Hashed password: " + hashedPassword1);
+        //User
+        String plainPassword2 = "Anvita@123"; // replace with your desired password
+        String hashedPassword2 = PasswordUtil.hashPassword(plainPassword2);
+        System.out.println("Hashed password: " + hashedPassword2);
+        
     }
 }

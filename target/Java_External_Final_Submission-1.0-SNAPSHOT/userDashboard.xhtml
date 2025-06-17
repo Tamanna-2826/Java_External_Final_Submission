@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>User Dashboard - Learnify</title>
+        <h:outputStylesheet name="css/userDashboardStyle.css"/>
+    </h:head>
+    <h:body>
+        <h:form id="dashboardForm">
+            <!-- Header Section -->
+            <div class="dashboard-header">
+                <h2>Welcome, #{userDashboardBean.userName}!</h2>
+            </div>
+
+            <!-- Featured Videos Section -->
+            <h3>Featured Videos</h3>
+            <p:carousel value="#{userDashboardBean.featuredVideos}" var="video" numVisible="3" numScroll="1" styleClass="featured-carousel">
+                <p:panel styleClass="video-card">
+                    <h:panelGrid columns="1">
+                        <h:graphicImage value="#{video.thumbnailurl}" 
+                                        styleClass="video-thumbnail" alt="Video Thumbnail" width="200" 
+                                        height="200"/>
+                        <h:outputText value="#{video.title}" styleClass="video-title"/>
+                        <h:outputText value="Duration: 0.#{video.duration} Sec" styleClass="video-meta"/>
+
+                        <!-- Actions Section -->
+                        <h:panelGroup layout="block" styleClass="video-actions">
+
+                            <!-- Like Icon -->
+                            <p:commandLink action="#{userDashboardBean.likeVideo(video)}" update="@form" title="Like this video">
+                                <i class="#{userDashboardBean.hasUserLiked(video.videoID) ? 'pi pi-heart-fill' : 'pi pi-heart'} like-icon">
+                                    <h:outputText value="#{userDashboardBean.getLikesForVideo(video.videoID)}" styleClass="action-count"/></i>
+                            </p:commandLink>
+
+                            <!-- Comment Icon -->
+                            <i class="pi pi-comment comment-icon" title="Add Comment"></i>
+
+                            <!-- Comment TextArea -->
+                            <p:inputTextarea value="#{userDashboardBean.newCommentTexts[video.videoID]}" rows="1" placeholder="Write comment..." styleClass="comment-box"/>
+
+                            <!-- Submit Comment -->
+                            <p:commandLink action="#{userDashboardBean.addComment(video.videoID)}" update="@form" title="Submit Comment">
+                                <i class="pi pi-send send-icon"></i>
+                            </p:commandLink>
+                            <!-- Watch Video -->
+                            <p:commandLink action="#{userDashboardBean.watchVideo(video)}" title="Watch Now">
+                                <i class="pi pi-play watch-icon"></i>
+                            </p:commandLink>
+                                        <!--<p:commandButton value="Watch Now" styleClass="watch-btn" action="#{userDashboardBean.watchVideo(video)}"/>-->
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:panel>
+            </p:carousel>
+
+            <!-- Categories Section -->
+            <h3>Browse by Category</h3>
+            <div class="category-bar">
+                <ui:repeat value="#{userDashboardBean.categories}" var="category">
+                    <p:commandButton value="#{category.categoryName}" icon="pi pi-video"  styleClass="category-btn"  style="#{userDashboardBean.getDynamicColor(category.categoryName)}" action="#{userDashboardBean.goToCategory(category.categoryID)}"/>
+                </ui:repeat>
+            </div>
+
+            <!-- Watch History and Trending Section -->
+            <div class="content-section">
+                <div class="watch-history">
+                    <h3>Watch History</h3>
+<!--                    <p:dataTable value="#{userDashboardBean.watchHistory}" var="history" emptyMessage="No watch history available.">
+                        <p:column>
+                            <h:panelGrid columns="2" styleClass="history-item">
+                                <video class="trending-thumbnail" controls="controls">
+                                    <source src="#{request.contextPath}#{video.videourl}" type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
+                                <h:graphicImage value="#{video.thumbnailurl}" styleClass="history-thumbnail"/>
+                                <h:panelGroup>
+                                    <h:outputText value="#{videoBean.findVideo(history.videoID).title}" styleClass="history-title"/>
+                                    <h:outputText value="Watched on: #{history.watchedAt}" styleClass="history-meta"/>
+                                    <p:commandButton value="Watch Again" styleClass="watch-btn" action="#{userDashboardBean.watchVideoById(history.videoID)}"/>
+                                </h:panelGroup>
+                            </h:panelGrid>
+                        </p:column>
+                    </p:dataTable>-->
+                    <p:dataTable value="#{userDashboardBean.watchHistory}" var="history" 
+                                 emptyMessage="No watch history available." 
+                                 styleClass="watch-table" 
+                                 style="width: 100%; border: none;">
+
+                        <p:column styleClass="watch-column">
+                            <div class="history-card">
+                                <video class="history-video" controls="controls" preload="none" style="pointer-events: none;">
+                                    <source src="#{request.contextPath}#{userDashboardBean.videosBean.findVideo(history.videoID).videourl}" type="video/mp4" />                                    Your browser does not support the video tag.
+                                </video>
+                                <div class="history-info">
+                                    <div class="history-title">
+                                        #{video.title}
+                                    </div>
+                                    <div class="history-meta">
+                                        Watched on: #{history.watchedAt}
+                                    </div>
+                                    <p:commandButton value="Watch Again" 
+                                                     action="#{userDashboardBean.watchVideoById(history.videoID)}"
+                                                     styleClass="watch-btn"/>
+                                </div>
+                            </div>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+
+                <!-- Trending Videos -->
+                <div class="trending-videos">
+                    <h3>Trending Now</h3>
+                    <p:dataList value="#{userDashboardBean.trendingVideos}" var="trending" type="ordered">
+                        <div class="trending-item">
+                            <video class="trending-thumbnail" controls="controls">
+                                <source src="#{request.contextPath}#{trending.videourl}" type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="trending-info">
+                                <div class="trending-title">#{trending.title}</div>
+                                <div class="trending-meta">
+                                    Views: #{userDashboardBean.videosBean.formatViewCount(trending.viewscount)}                                </div>
+                                <p:commandButton value="Watch Now" styleClass="watch-btn" action="#{userDashboardBean.watchVideo(trending)}"/>
+                            </div>
+                        </div>
+                    </p:dataList>
+                </div>
+            </div>
+
+            <!-- User Progress -->
+            <!-- User Progress -->
+            <div class="user-progress">
+                <h3>Your Progress</h3>
+                <p:progressBar value="#{userDashboardBean.userProgressValue}" styleClass="progress-bar"/>
+                <h:outputText value="#{userDashboardBean.userProgress}" styleClass="progress-label"/>
+            </div>
+        </h:form>
+    </h:body>
+</html>
