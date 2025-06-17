@@ -16,7 +16,7 @@
 
             <h:form styleClass="login-form">
 
-                <a href="landing.xhtml" class="back-link"><i class="fas fa-arrow-left"> </i>  Back to Home</a>
+               
                 <div class="logo-section">
                     <div class="logo">
                         <div class="logo-icon">
@@ -26,22 +26,24 @@
                     </div>
                 </div>
 
+
                 <div class="card">
-                    <h2>Welcome Back</h2>
+                    
                     <div class="role-toggle">
                         <button type="button" class="active">Instructor</button>
                     </div>
                     <!-- Action toggle -->
                     <div class="action-toggle">
                         <h:commandButton value="Sign In" action="#{loginBean.setActionType('login')}"
-                                         styleClass="#{loginBean.actionType eq 'login' ? 'active' : ''}">
+                                         styleClass="toggle-button #{loginBean.actionType eq 'login' ? 'active' : ''}">
                             <f:ajax render="@form" />
                         </h:commandButton>
                         <h:commandButton value="Register" action="#{loginBean.setActionType('register')}"
-                                         styleClass="#{loginBean.actionType eq 'register' ? 'active' : ''}">
+                                         styleClass="toggle-button #{loginBean.actionType eq 'register' ? 'active' : ''}">
                             <f:ajax render="@form" />
                         </h:commandButton>
                     </div>
+
 
                     <div class="icon-container">
                         <i class="login-icon">🎥</i>
