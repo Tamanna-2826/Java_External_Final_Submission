@@ -1,168 +1,141 @@
-/* General page styling */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 20px;
-}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
 
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
+    <ui:composition template="sidebar.xhtml">
 
-.page-header h2 {
-    color: #333;
-    margin: 0;
-}
+        <ui:define name="pageTitle">Videos Management</ui:define>
+        <ui:define name="pageSubtitle">Track and manage uploaded videos</ui:define>
 
-/* Search bar container for icon */
-.search-container {
-    position: relative;
-    display: inline-block;
-}
-.search-bar {
-    width: 300px;
-    padding: 8px 8px 8px 32px; /* Add padding on the left for the icon */
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-}
+        <ui:define name="content">
+            <h:form id="videosForm">
 
-.search-bar:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-}
-/* Add search icon using pseudo-element */
-.search-container::before {
-    content: "\1F50D"; /* Unicode for magnifying glass (search icon) */
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #666;
-}
-/* Video table styling */
-.video-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+                <!-- Search Bar -->
+                <p:panelGrid columns="4" style="margin-bottom:1em; width: 100%;" columnClasses="p-col-2,p-col-8,p-col-2,p-col-2">
+                    <p:selectOneMenu value="#{videoLisingBean.searchType}" style="width:100%">
+                        <f:selectItem itemLabel="All" itemValue="all" />
+                        <f:selectItem itemLabel="Title" itemValue="title" />
+                        <f:selectItem itemLabel="Category" itemValue="category" />
+                        <p:ajax update="categorySelect" />
+                    </p:selectOneMenu>
 
-.video-table th,
-.video-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
+                    <p:inputText id="searchInput"
+                                 value="#{videoLisingBean.searchTerm}"
+                                 placeholder="Search"
+                                 style="width:100%" />
 
-.video-table th {
-    background-color: #007bff;
-    color: #fff;
-}
+                    <p:selectOneMenu id="categorySelect" 
+                                     value="#{videoLisingBean.selectedCategoryId}" 
+                                     style="width:100%"
+                                     rendered="#{videoLisingBean.searchType == 'category'}">
+                        <f:selectItem itemLabel="Select Category" itemValue="#{null}" />
+                        <f:selectItems value="#{videoLisingBean.categories}" 
+                                      var="cat" 
+                                      itemLabel="#{cat.categoryName}" 
+                                      itemValue="#{cat.categoryID}" />
+                    </p:selectOneMenu>
 
-.video-table tr:hover {
-    background-color: #f1f1f1;
-}
+                    <h:panelGroup styleClass="button-group">
+                        <p:commandButton value="Search" 
+                                        action="#{videoLisingBean.searchVideos}" 
+                                        update="videosTable" 
+                                        styleClass="ui-button-primary" />
+                        <p:commandButton value="Clear" 
+                                        action="#{videoLisingBean.clearSearch}" 
+                                        update="videosTable searchInput categorySelect" 
+                                        styleClass="ui-button-secondary" />
+                    </h:panelGroup>
+                </p:panelGrid>
 
-.action-column {
-    text-align: center;
-}
+                <!-- Videos Table -->
+                <p:dataTable id="videosTable" 
+                            value="#{videoLisingBean.filteredVideos}" 
+                            var="video"
+                            styleClass="video-table" 
+                            emptyMessage="No videos found.">
+                    <p:column headerText="Title">
+                        <h:outputText value="#{video.title}"/>
+                    </p:column>
+                    <p:column headerText="Uploader">
+                        <h:outputText value="#{video.userID.fullName}"/>
+                    </p:column>
+                    <p:column headerText="Category">
+                        <h:outputText value="#{video.categoryID != null ? video.categoryID.categoryName : 'Uncategorized'}"/>
+                    </p:column>
+                    <p:column headerText="Upload Date">
+                        <h:outputText value="#{videoLisingBean.formatDate(video.uploaddate)}"/>
+                    </p:column>
+                    <p:column headerText="Status">
+                        <h:outputText value="#{video.status}"/>
+                    </p:column>
+                    <p:column headerText="Actions" styleClass="action-column">
+                        <p:commandButton value="View Details" 
+                                        styleClass="view-btn"
+                                        action="#{videoLisingBean.viewVideoDetails(video)}"
+                                        update=":videosForm:videoDetailsDialog"/>
+                    </p:column>
+                </p:dataTable>
 
-.view-btn {
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-}
+                <!-- Video Details Dialog -->
+                <p:dialog id="videoDetailsDialog" 
+                         header="Video Details" 
+                         widgetVar="videoDetailsDialog"
+                         modal="true" 
+                         styleClass="video-details-dialog" 
+                         resizable="false">
+                    <h:panelGroup rendered="#{videoLisingBean.selectedVideo != null}">
+                        <div class="video-container">
+                            <h3>Watch Video</h3>
+                            <h:panelGrid columns="1">
+                                <h:panelGroup rendered="#{videoLisingBean.videoUrl != null}">
+                                    <video controls="controls" width="100%">
+                                        <source src="#{request.contextPath}/resources/videos/#{videoLisingBean.videoUrl}" type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{videoLisingBean.videoUrl == null}">
+                                    <p>Video file not available.</p>
+                                </h:panelGroup>
+                            </h:panelGrid>
+                        </div>
 
-.view-btn:hover {
-    background-color: #218838;
-}
+                        <div class="details-container">
+                            <h:panelGrid columns="2" styleClass="video-info-grid">
+                                <h:outputLabel value="Title:"/>
+                                <h:outputText value="#{videoLisingBean.selectedVideo.title}"/>
 
-/* Video details dialog styling */
-/* Video details dialog styling */
-.video-details-dialog .ui-dialog-content {
-    padding: 20px;
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    width: 700px; /* Wider dialog for landscape layout */
-    max-width: 90vw;
-    height: 500px;
-}
+                                <h:outputLabel value="Uploader:"/>
+                                <h:outputText value="#{videoLisingBean.selectedVideo.userID.fullName}"/>
 
-.video-details-dialog .ui-dialog {
-    width: 750px !important; /* Adjust dialog container width */
-    max-width: 95vw;
-}
+                                <h:outputLabel value="Category:"/>
+                                <h:outputText value="#{videoLisingBean.selectedVideo.categoryID != null ? videoLisingBean.selectedVideo.categoryID.categoryName : 'Uncategorized'}"/>
 
-.video-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
+                                <h:outputLabel value="Upload Date:"/>
+                                <h:outputText value="#{videoLisingBean.formatDate(videoLisingBean.selectedVideo.uploaddate)}"/>
 
-.details-container {
-    flex: 1.2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Vertically center the content */
-    align-items: flex-start; /* Ensure horizontal alignment is left */
-}
+                                <h:outputLabel value="Duration:"/>
+                                <h:outputText value="#{videoLisingBean.formatDuration(videoLisingBean.selectedVideo.duration)}"/>
 
-.video-info-grid {
-    width: 100%;
-    margin-bottom: 20px;
-}
+                                <h:outputLabel value="Views:"/>
+                                <h:outputText value="#{videoLisingBean.formatViewCount(videoLisingBean.selectedVideo.viewscount)}"/>
 
-.video-info-grid td {
-    padding: 8px;
-    vertical-align: top; /* Align text to the top */
+                                <h:outputLabel value="Likes:"/>
+                                <h:outputText value="#{videoLisingBean.getVideoStatistics(videoLisingBean.selectedVideo).get('likes')}"/>
 
-}
+                                <h:outputLabel value="Comments:"/>
+                                <h:outputText value="#{videoLisingBean.getVideoStatistics(videoLisingBean.selectedVideo).get('comments')}"/>
 
-.video-info-grid td:first-child {
-    font-weight: bold;
-    color: #555;
-    width: 30%; /* Reserve space for labels */
-}
-.video-info-grid td:nth-child(2) {
+                                <h:outputLabel value="Status:"/>
+                                <h:outputText value="#{videoLisingBean.selectedVideo.status}"/>
+                            </h:panelGrid>
+                        </div>
+                    </h:panelGroup>
+                </p:dialog>
+            </h:form>
+        </ui:define>
 
-    word-break: break-word; /* Ensure long text like the title wraps */
-
-    max-width: 0; /* Prevent overflow by allowing text to wrap */
-}
-video {
-    max-width: 100%;
-    width: 100%;
-    height: auto;
-    max-height: 360px; /* Set a max-height to ensure consistent centering */
-    margin-bottom: 20px;
-
-}
-
-.close-btn {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 20px;
-    align-self: flex-end; /* Align close button to the right */
-
-
-}
-
-.close-btn:hover {
-    background-color: #c82333;
-}
+    </ui:composition>
+</html>

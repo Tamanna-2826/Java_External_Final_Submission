@@ -2,12 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
-    <h:head>
-        <title>Users Management</title>
-        <h:outputStylesheet name="css/users.css"/>
-    </h:head>
-    <h:body>
+<ui:composition template="sidebar.xhtml">
+
+    <ui:define name="pageTitle">Users Management</ui:define>
+    <ui:define name="pageSubtitle">Monitor and manage users on the platform</ui:define>
+
+    <ui:define name="content">
         <h:form id="usersForm">
             <!-- Header with Search -->
             <div class="page-header">
@@ -22,7 +24,7 @@
 
             <!-- Users Table -->
             <p:dataTable id="usersTable" value="#{usersListingBean.filteredUsers}" var="user"
-                         styleClass="user-table" emptyMessage="No users found." lazy="false">
+                         styleClass="user-table" emptyMessage="No users found.">
                 <p:column headerText="Name">
                     <h:outputText value="#{user.fullName}"/>
                 </p:column>
@@ -59,8 +61,8 @@
                     </h:panelGrid>
 
                     <h3>Watch History</h3>
-                    <p:dataTable value="#{usersListingBean.userWatchHistory}" var="activityModel" styleClass="watch-history-table"
-                                 emptyMessage="No watch history for this user." lazy="false">
+                    <p:dataTable value="#{usersListingBean.userWatchHistory}" var="activityModel"
+                                 styleClass="watch-history-table" emptyMessage="No watch history for this user.">
                         <p:column headerText="Video ID">
                             <h:outputText value="#{activityModel.videoID}"/>
                         </p:column>
@@ -79,5 +81,6 @@
                 </h:panelGroup>
             </p:dialog>
         </h:form>
-    </h:body>
+    </ui:define>
+</ui:composition>
 </html>
