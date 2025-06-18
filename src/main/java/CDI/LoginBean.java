@@ -61,6 +61,7 @@ public class LoginBean implements Serializable {
     private long uploaderCount;
     private long userCount;
     private long totalUserCount;
+    private boolean showIcon = true;
 
     public LoginBean() {
 //        refreshCounts();
@@ -69,6 +70,14 @@ public class LoginBean implements Serializable {
     @PostConstruct
     public void init() {
         refreshCounts(); // Call refreshCounts after injection
+    }
+
+    public boolean isShowIcon() {
+        return showIcon;
+    }
+
+    public void setShowIcon(boolean showIcon) {
+        this.showIcon = showIcon;
     }
 
     public void refreshCounts() {
@@ -558,4 +567,27 @@ public class LoginBean implements Serializable {
         this.fullName = fullName;
     }
 
+    /**
+     * Get user by ID with role USER
+     */
+    public String getUserById(Integer userId) {
+        System.out.println("UserID for comment: " + userId);
+        try {
+            if (userId == null) {
+                addErrorMessage("User ID cannot be null.");
+                return null;
+            }
+            Users user = userService.findUserNameById(userId);
+            if (user != null && user.getRole() == UserRole.USER && user.getIsActive()) {
+                return user.getFullName();
+            } else {
+                addErrorMessage("User not found or does not have USER role.");
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            addErrorMessage("Error fetching user by ID.");
+            return null;
+        }
+    }
 }

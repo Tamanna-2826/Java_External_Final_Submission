@@ -104,10 +104,10 @@
                     </ul>
 
                     <div class="logout-section">
-                        <h:commandLink action="#{loginBean.logout}" styleClass="logout-link">
+                        <h:link outcome="#{loginBean.logout()}" styleClass="logout-link">
                             <i class="fas fa-sign-out-alt menu-icon"></i>
                             <span>Logout</span>
-                        </h:commandLink>
+                        </h:link>
                     </div>
                 </div>
             </div>

@@ -7,66 +7,82 @@
     <h:head>
         <title>User Dashboard - Learnify</title>
         <h:outputStylesheet name="css/userDashboardStyle.css"/>
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
     </h:head>
     <h:body>
         <h:form id="dashboardForm">
-            <!-- Header Section -->
-            <div class="dashboard-header">
-                <h2>Welcome, #{userDashboardBean.userName}!</h2>
+            <p:remoteCommand name="resetDashboard" action="#{userDashboardBean.resetState()}" 
+                             update="categoryBar" process="@none" 
+                             oncomplete="console.log('Dashboard reset')" 
+                             autoRun="true"/>
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <p:menuButton value="" icon="pi pi-user" styleClass="profile-menu">
+                    <p:menuitem value="Hello, #{userDashboardBean.userName}" disabled="true" styleClass="profile-username"/>
+                    <p:menuitem value="Logout" action="#{userDashboardBean.logout()}" icon="pi pi-sign-out" ajax="false"/>
+                </p:menuButton>
             </div>
 
             <!-- Featured Videos Section -->
-            <h3>Featured Videos</h3>
+            <h3 class="section-title">Featured Videos</h3>
             <p:carousel value="#{userDashboardBean.featuredVideos}" var="video" numVisible="3" numScroll="1" styleClass="featured-carousel">
-                <p:panel styleClass="video-card">
-                    <h:panelGrid columns="1">
-                        <h:graphicImage value="#{video.thumbnailurl}" 
-                                        styleClass="video-thumbnail" alt="Video Thumbnail" width="200" 
-                                        height="200"/>
-                        <h:outputText value="#{video.title}" styleClass="video-title"/>
-                        <h:outputText value="Duration: 0.#{video.duration} Sec" styleClass="video-meta"/>
+                <div class="video-card-container">
 
-                        <!-- Actions Section -->
-                        <h:panelGroup layout="block" styleClass="video-actions">
+                    <p:panel styleClass="video-card">
+                        <h:panelGrid columns="1" columnClasses="ui-grid-col-12">
+                            <h:graphicImage value="#{video.thumbnailurl}" 
+                                            styleClass="video-thumbnail" alt="Video Thumbnail" width="200" 
+                                            height="200"/>
+                            <h:outputText value="#{video.title}" styleClass="video-title"/>
+                            <h:outputText value="Duration: 0.#{video.duration} Sec" styleClass="video-meta"/>
 
-                            <!-- Like Icon -->
-                            <p:commandLink action="#{userDashboardBean.likeVideo(video)}" update="@form" title="Like this video">
-                                <i class="#{userDashboardBean.hasUserLiked(video.videoID) ? 'pi pi-heart-fill' : 'pi pi-heart'} like-icon">
-                                    <h:outputText value="#{userDashboardBean.getLikesForVideo(video.videoID)}" styleClass="action-count"/></i>
-                            </p:commandLink>
+                            <h:panelGroup layout="block" styleClass="video-actions">
 
-                            <!-- Comment Icon -->
-                            <i class="pi pi-comment comment-icon" title="Add Comment"></i>
+                                <p:commandLink action="#{userDashboardBean.likeVideo(video)}" update="@form" title="Like this video">
+                                    <i class="#{userDashboardBean.hasUserLiked(video.videoID) ? 'pi pi-heart-fill' : 'pi pi-heart'} like-icon">
+                                        <h:outputText value="#{userDashboardBean.getLikesForVideo(video.videoID)}" styleClass="action-count"/></i>
+                                </p:commandLink>
 
-                            <!-- Comment TextArea -->
-                            <p:inputTextarea value="#{userDashboardBean.newCommentTexts[video.videoID]}" rows="1" placeholder="Write comment..." styleClass="comment-box"/>
+                                <i class="pi pi-comment comment-icon" title="Add Comment"></i>
 
-                            <!-- Submit Comment -->
-                            <p:commandLink action="#{userDashboardBean.addComment(video.videoID)}" update="@form" title="Submit Comment">
-                                <i class="pi pi-send send-icon"></i>
-                            </p:commandLink>
-                            <!-- Watch Video -->
-                            <p:commandLink action="#{userDashboardBean.watchVideo(video)}" title="Watch Now">
-                                <i class="pi pi-play watch-icon"></i>
-                            </p:commandLink>
-                                        <!--<p:commandButton value="Watch Now" styleClass="watch-btn" action="#{userDashboardBean.watchVideo(video)}"/>-->
-                        </h:panelGroup>
-                    </h:panelGrid>
-                </p:panel>
+                                <!-- Comment TextArea -->
+                                <p:inputTextarea value="#{userDashboardBean.newCommentTexts[video.videoID]}" rows="1" placeholder="Write comment..." styleClass="comment-box"/>
+
+                                <!-- Submit Comment -->
+                                <p:commandLink action="#{userDashboardBean.addComment(video.videoID)}" update="@form" title="Submit Comment">
+                                    <i class="pi pi-send send-icon"></i>
+                                </p:commandLink>
+                                <!-- Watch Video -->
+                                <p:commandLink action="#{userDashboardBean.watchVideo(video)}" title="Watch Now">
+                                    <i class="pi pi-play watch-icon"></i>
+                                </p:commandLink>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </p:panel>
+                </div>
             </p:carousel>
+            <!-- Category Search Box -->
+            <h:panelGroup styleClass="category-search">
+                <p:inputText value="#{userDashboardBean.categorySearchText}" placeholder="Search Categories..." >
+                    <p:ajax event="keyup" update="categoryBar" process="@this" />
+                </p:inputText>
+    <!--<p:commandButton icon="pi pi-search" action="#{userDashboardBean.filterCategories()}" update="@form" title="Search"/>-->
+            </h:panelGroup>
 
             <!-- Categories Section -->
-            <h3>Browse by Category</h3>
-            <div class="category-bar">
+            <h3 class="section-title">Browse by Category</h3>
+            <h:panelGroup id="categoryBar" styleClass="category-bar">   
                 <ui:repeat value="#{userDashboardBean.categories}" var="category">
-                    <p:commandButton value="#{category.categoryName}" icon="pi pi-video"  styleClass="category-btn"  style="#{userDashboardBean.getDynamicColor(category.categoryName)}" action="#{userDashboardBean.goToCategory(category.categoryID)}"/>
+                    <p:commandButton value="#{category.categoryName}" icon="pi pi-video"  styleClass="category-btn"  style="#{userDashboardBean.getDynamicColor(category.categoryName)}" action="#{userDashboardBean.goToCategory(category.categoryID)}" ajax="false"/>
                 </ui:repeat>
-            </div>
+            </h:panelGroup>
 
             <!-- Watch History and Trending Section -->
             <div class="content-section">
                 <div class="watch-history">
-                    <h3>Watch History</h3>
+                    <h3 class="section-title">Watch History</h3>
 <!--                    <p:dataTable value="#{userDashboardBean.watchHistory}" var="history" emptyMessage="No watch history available.">
                         <p:column>
                             <h:panelGrid columns="2" styleClass="history-item">
@@ -111,7 +127,7 @@
 
                 <!-- Trending Videos -->
                 <div class="trending-videos">
-                    <h3>Trending Now</h3>
+                    <h3 class="section-title">Trending Now</h3>
                     <p:dataList value="#{userDashboardBean.trendingVideos}" var="trending" type="ordered">
                         <div class="trending-item">
                             <video class="trending-thumbnail" controls="controls">
@@ -131,11 +147,11 @@
 
             <!-- User Progress -->
             <!-- User Progress -->
-            <div class="user-progress">
+<!--            <div class="user-progress">
                 <h3>Your Progress</h3>
                 <p:progressBar value="#{userDashboardBean.userProgressValue}" styleClass="progress-bar"/>
                 <h:outputText value="#{userDashboardBean.userProgress}" styleClass="progress-label"/>
-            </div>
+            </div>-->
         </h:form>
     </h:body>
 </html>

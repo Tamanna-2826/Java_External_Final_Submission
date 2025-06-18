@@ -1,5 +1,8 @@
 body.login-body {
-    background: linear-gradient(to bottom right, #e6f3ff, #d9eaff);
+    background-image: url('#{request.contextPath}/uploads/thumbnails/userLoginBgImage.png');;
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
     font-family: 'Inter', sans-serif;
     display: flex;
     justify-content: center;
@@ -10,11 +13,11 @@ body.login-body {
 
 .login-form {
     background-color: #fff;
-    padding: 2.5rem;
+    padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
     box-sizing: border-box;
 }
 
@@ -46,7 +49,7 @@ body.login-body {
 .logo-icon {
     width: 30px;
     height: 30px;
-    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     border-radius: 6px;
     display: flex;
     align-items: center;
@@ -63,6 +66,7 @@ h2 {
     font-size: 1.8rem;
     color: #1f2937;
     margin-bottom: 1rem;
+    text-align: center; /* Ensure centering */
 }
 
 .role-toggle button,
@@ -100,6 +104,7 @@ h3 {
     font-size: 1.2rem;
     color: #374151;
     margin-bottom: 1rem;
+    text-align: center; /* Ensure centering */
 }
 
 .input-field {
@@ -115,7 +120,7 @@ h3 {
 .submit-button {
     width: 100%;
     padding: 0.8rem;
-    background: linear-gradient(to right, #3b82f6, #60a5fa);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     color: white;
     border: none;
     border-radius: 5px;
@@ -157,4 +162,77 @@ h:outputLabel {
     font-size: 0.9rem;
     color: #374151;
     margin-bottom: 0.3rem;
+}
+/* Sign In Button */
+.signin-btn {
+    background: linear-gradient(135deg, #7289f0 0%, #8257b0 100%) !important;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.signin-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Register Button */
+.register-btn {
+    background: linear-gradient(135deg, #829bf4 0%, #8a67b3 100%) !important;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.register-btn:hover {
+    transform: scale(1.05);
+}
+/* Button Group for Sign In and Register */
+.button-group {
+    display: flex;
+    gap: 10px; /* Adds 10px space between buttons */
+    justify-content: center; /* Centers the buttons horizontally */
+    margin-bottom: 20px; /* Adds some space below the button group */
+}
+
+/* Existing styles for buttons (from previous response) */
+.signin-btn {
+    background: linear-gradient(135deg, #7289f0 0%, #8257b0 100%) !important;
+    border: none;
+    color: #fff;
+    padding: 8px 16px; /* Reduced from 10px 20px */
+    border-radius: 6px; /* Reduced from 8px */
+    font-size: 14px; /* Reduced from 16px */
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.signin-btn:hover {
+    transform: scale(1.05);
+}
+
+.register-btn {
+    background: linear-gradient(135deg, #829bf4 0%, #8a67b3 100%) !important;
+    border: none;
+    color: #fff;
+    padding: 8px 16px; /* Reduced from 10px 20px */
+    border-radius: 6px; /* Reduced from 8px */
+    font-size: 14px; /* Reduced from 16px */
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.register-btn:hover {
+    transform: scale(1.05);
 }

@@ -2,7 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Learnify - Learn Without Limits</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -22,18 +24,18 @@
                     Learnify
                 </div>
 
-<!--                <nav>
-                    <ul class="nav-menu">
-                        <li><a href="#home">Browse</a></li>
-                        <li><a href="#categories">Categories</a></li>
-                        <li><a href="#about">About</a></li>
-                    </ul>
-                </nav>-->
+                <!--                <nav>
+                                    <ul class="nav-menu">
+                                        <li><a href="#home">Browse</a></li>
+                                        <li><a href="#categories">Categories</a></li>
+                                        <li><a href="#about">About</a></li>
+                                    </ul>
+                                </nav>-->
 
-<!--                <div class="header-actions">
-                    <a href="#login" class="btn btn-outline">Log In</a>
-                    <a href="#signup" class="btn btn-primary">Get Started</a>
-                </div>-->
+                <!--                <div class="header-actions">
+                                    <a href="#login" class="btn btn-outline">Log In</a>
+                                    <a href="#signup" class="btn btn-primary">Get Started</a>
+                                </div>-->
             </div>
         </header>
 
@@ -56,38 +58,9 @@
                         <h:link outcome="uploaderLogin.xhtml" styleClass="btn btn-outline btn-large">
                             Become an Instructor
                         </h:link>
-
-                    </div>
-
-                    <!-- Stats Section -->
-                    <div class="stats-section">
-                        <div class="stat-item">
-                            <div class="stat-icon students">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="stat-number">50K+</div>
-                            <div class="stat-label">Students</div>
-                        </div>
-
-                        <div class="stat-item">
-                            <div class="stat-icon instructors">
-                                <i class="fas fa-chalkboard-teacher"></i>
-                            </div>
-                            <div class="stat-number">2.5K+</div>
-                            <div class="stat-label">Instructors</div>
-                        </div>
-
-                        <div class="stat-item">
-                            <div class="stat-icon courses">
-                                <i class="fas fa-play-circle"></i>
-                            </div>
-                            <div class="stat-number">100K+</div>
-                            <div class="stat-label">Video Lessons</div>
-                        </div>
                     </div>
                 </div>
             </section>
-
             <!-- Categories Section -->
             <section class="categories-section">
                 <div class="categories-container">
@@ -97,92 +70,26 @@
                             Choose from our diverse range of subjects and start your learning journey
                         </p>
                     </div>
-
-                    <div class="categories-grid">
-                        <div class="category-card">
-                            <div class="category-icon programming">
-                                <i class="fas fa-code"></i>
-                            </div>
-                            <h3 class="category-title">Programming</h3>
-                            <p class="category-description">
-                                Learn programming languages, frameworks, and development best practices.
-                            </p>
-                            <div class="category-stats">
-                                <span>120 Courses</span>
-                                <span>Beginner</span>
-                            </div>
+                    <h:form id="categoriesForm">
+                        <div class="categories-grid">
+                            <ui:repeat value="#{categoryBean.categories}" var="category">
+                                <!--<div class="category-card">-->
+                                <p:commandLink action="#{userDashboardBean.goToCategory(category.categoryID)}" styleClass="category-card" style="text-decoration: none; color: inherit;">                                <div class="category-icon #{category.categoryName.toLowerCase()}">
+                                        <i class="fas fa-book"></i>
+                                    </div>
+                                    <h3 class="category-title">#{category.categoryName}</h3>
+                                    <p class="category-description">
+                                        #{category.description}
+                                    </p>
+                                    <div class="category-stats">
+                                        <span>#{categoryBean.getVideoCount(category)} Courses</span>
+                                        <span>#{category.categoryName == 'Programming' || category.categoryName == 'Design' ? 'Beginner' : 'Expert'}</span>
+                                    </div>
+                                </p:commandLink>
+                                <!--</div>-->
+                            </ui:repeat>
                         </div>
-
-                        <div class="category-card">
-                            <div class="category-icon design">
-                                <i class="fas fa-palette"></i>
-                            </div>
-                            <h3 class="category-title">Design</h3>
-                            <p class="category-description">
-                                Master design principles, tools, and creative workflows.
-                            </p>
-                            <div class="category-stats">
-                                <span>85 Courses</span>
-                                <span>Creative</span>
-                            </div>
-                        </div>
-
-                        <div class="category-card">
-                            <div class="category-icon marketing">
-                                <i class="fas fa-bullhorn"></i>
-                            </div>
-                            <h3 class="category-title">Marketing</h3>
-                            <p class="category-description">
-                                Digital marketing strategies, social media, and brand building.
-                            </p>
-                            <div class="category-stats">
-                                <span>95 Courses</span>
-                                <span>Business</span>
-                            </div>
-                        </div>
-
-                        <div class="category-card">
-                            <div class="category-icon business">
-                                <i class="fas fa-briefcase"></i>
-                            </div>
-                            <h3 class="category-title">Business</h3>
-                            <p class="category-description">
-                                Entrepreneurship, management, and business development skills.
-                            </p>
-                            <div class="category-stats">
-                                <span>78 Courses</span>
-                                <span>Expert</span>
-                            </div>
-                        </div>
-
-                        <div class="category-card">
-                            <div class="category-icon data-science">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <h3 class="category-title">Data Science</h3>
-                            <p class="category-description">
-                                Analytics, machine learning, and data visualization techniques.
-                            </p>
-                            <div class="category-stats">
-                                <span>67 Courses</span>
-                                <span>Expert</span>
-                            </div>
-                        </div>
-
-                        <div class="category-card">
-                            <div class="category-icon ai">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <h3 class="category-title">AI</h3>
-                            <p class="category-description">
-                                Artificial intelligence, deep learning, and neural networks.
-                            </p>
-                            <div class="category-stats">
-                                <span>45 Courses</span>
-                                <span>Expert</span>
-                            </div>
-                        </div>
-                    </div>
+                    </h:form>
                 </div>
             </section>
 
@@ -194,7 +101,7 @@
                         Join thousands of learners who are already advancing their skills with our
                         comprehensive courses.
                     </p>
-                    <a href="#trial" class="btn btn-white btn-large">Start Your Free Trial</a>
+                    <!--<a href="#trial" class="btn btn-white btn-large">Start Your Free Trial</a>-->
                 </div>
             </section>
         </main>

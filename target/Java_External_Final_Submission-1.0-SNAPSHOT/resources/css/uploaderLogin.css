@@ -10,12 +10,13 @@ body.login-body {
 
 .login-form {
     background-color: #fff;
-    padding: 2.5rem;
+    padding: 1.5rem;
     border-radius: 15px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 420px;
+    max-width: 450px;
     box-sizing: border-box;
+    justify-content: center;
 }
 
 .logo-section {
@@ -144,4 +145,55 @@ body.login-body {
     align-items: center;
     justify-content: center;
     color: white;
+}
+/* Sign In Button */
+.signin-btn {
+    background: linear-gradient(135deg, #7289f0 0%, #8257b0 100%) !important;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.signin-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Register Button */
+.register-btn {
+    background: linear-gradient(135deg, #829bf4 0%, #8a67b3 100%) !important;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.register-btn:hover {
+    transform: scale(1.05);
+}
+.button-group {
+    display: flex;
+    gap: 10px; /* Adds 10px space between buttons */
+    justify-content: center; /* Centers the buttons horizontally */
+    margin-bottom: 20px; /* Adds some space below the button group */
+}
+h2 {
+    font-size: 1.8rem;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    text-align: center; /* Ensure centering */
+}
+h3 {
+    font-size: 1.8rem;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    text-align: center; /* Ensure centering */
 }

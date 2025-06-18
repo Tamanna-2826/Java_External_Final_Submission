@@ -346,7 +346,7 @@ public class VideoBean {
     }
 
     public List<Videos> getVideosByCategory(int categoryId) {
-        return em.createQuery("SELECT v FROM Videos v WHERE v.category.categoryID = :catId AND v.status = 'published'", Videos.class)
+        return em.createQuery("SELECT v FROM Videos v WHERE v.categoryID.categoryID = :catId AND v.status = 'published'", Videos.class)
                 .setParameter("catId", categoryId)
                 .getResultList();
     }

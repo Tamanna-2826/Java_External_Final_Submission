@@ -337,7 +337,7 @@ public class Users implements Serializable {
         this.loginAttempts = 0;
     }
 
-    public boolean isAccountLocked() {
+    public Boolean isAccountLocked() {
         return accountLocked;
     }
 

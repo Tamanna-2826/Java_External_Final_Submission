@@ -22,11 +22,6 @@
                         <span class="subtitle">Manage your content and grow your audience</span>
                     </div>
                     <div class="header-right">
-                        <p:commandButton value="Upload Video" 
-                                         icon="pi pi-upload"
-                                         styleClass="upload-btn"
-                                         onclick="PF('uploadDialog').show()" 
-                                         type="button" />
                         <p:menuButton value="#{uploaderBean.uploaderName}" 
                                       icon="pi pi-user"
                                       styleClass="user-menu">
@@ -56,7 +51,7 @@
                             <span class="card-title">Total Views</span>
                         </div>
                         <div class="card-value">#{uploaderBean.totalViews}</div>
-                        <div class="card-change positive">+3.5K this week</div>
+                        <div class="card-change positive">+3 this week</div>
                     </div>
 
                     <div class="analytics-card">
@@ -65,7 +60,7 @@
                             <span class="card-title">Total Likes</span>
                         </div>
                         <div class="card-value">#{uploaderBean.totalLikes}</div>
-                        <div class="card-change positive">+127 this week</div>
+                        <div class="card-change positive">+1 this week</div>
                     </div>
 
                     <div class="analytics-card">
@@ -80,10 +75,11 @@
 
                 <!-- Views Analytics Chart -->
                 <div class="chart-section">
-                    <div class="chart-header">
-                        <h3>Views Analytics</h3>
-                        <span class="chart-subtitle">Your video views over the last 7 days</span>
-                    </div>
+                    <p:messages id="editMessages" showDetail="true" />
+                    <!--                    <div class="chart-header">
+                                            <h3>Views Analytics</h3>
+                                            <span class="chart-subtitle">Your video views over the last 7 days</span>
+                                        </div>-->
                 </div>
 
                 <!-- Video Management Tabs -->
@@ -94,8 +90,8 @@
                                 <h3>My Videos</h3>
                                 <span class="tab-subtitle">Manage your uploaded content</span>
                                 <p:commandButton value="Upload New Video" 
-                                                 icon="pi pi-plus"
-                                                 styleClass="upload-new-btn"
+                                                 icon="pi pi-upload"
+                                                 styleClass="upload-btn"
                                                  onclick="PF('uploadDialog').show()" 
                                                  type="button" />
                             </div>
@@ -149,21 +145,21 @@
                                 <p:column headerText="Actions" styleClass="actions-column" width="10%">
                                     <div class="action-buttons">
                                         <p:commandButton icon="pi pi-pencil" 
-                                                         action="#{uploaderBean.editVideo(video.video)}" />
-
+                                                         action="#{uploaderBean.editVideo(video.video)}"
+                                                         styleClass="rounded-button ui-button-flat"
+                                                         update=":editForm :editForm:editMessages :messages"
+                                                         oncomplete="PF('editDialog').show()"/>
                                         <p:commandButton
                                             action="#{uploaderBean.deleteVideo(video.video)}"
                                             onclick="return confirm('Are you sure you want to delete this video?')"
                                             icon="pi pi-trash"
-                                            update="@form">
-                                            <!--                                            <p:confirm header="Confirm Delete"
-                                                                                                   message="Are you sure you want to delete this category?"
-                                                                                                   icon="pi pi-exclamation-triangle"/>-->
+                                            update="@form"
+                                            styleClass="rounded-button ui-button-flat">
                                         </p:commandButton>
                                         <h:panelGroup rendered="#{not empty video.video.videourl}" styleClass="video-action-row">
                                             <h:link outcome="/watchVideo" target="_blank">
                                                 <f:param name="videoId" value="#{video.video.videoID}" />
-                                                <i class="pi pi-play"></i> Watch Video
+                                                <i class="pi pi-play"></i> Watch
                                             </h:link>
                                         </h:panelGroup>
                                         <h:panelGroup rendered="#{empty video.video.videourl}" styleClass="video-action-row">
@@ -174,14 +170,6 @@
 
                             </p:dataTable>
                         </p:tab>
-
-                        <p:tab title="Playlists">
-                            <div class="tab-content">
-                                <h3>Playlists</h3>
-                                <p>Manage your video playlists here.</p>
-                            </div>
-                        </p:tab>
-
                         <p:tab title="Comments">
                             <div class="tab-content">
                                 <h3>Comments</h3>
@@ -247,35 +235,39 @@
                         <p:commandButton value="Upload Video" 
                                          styleClass="upload-submit-btn"
                                          action="#{uploaderBean.uploadVideo}"
-                                         update="@form"
-                                         oncomplete="if(args.success) PF('uploadDialog').hide()" />
+                                         update=":mainForm :uploadForm :messages"
+                                         oncomplete="if(args &amp;&amp; !args.validationFailed &amp;&amp; document.querySelector('.ui-messages-error') === null) PF('uploadDialog').hide();" />
+                        />
                     </div>
                 </div>
             </h:form>
         </p:dialog>
-        <!--Edit Dialog-->
+        <!-- Messages -->
         <p:dialog header="Edit Video" 
                   widgetVar="editDialog" 
                   modal="true" 
                   width="600px"
-                  height="400px"
+                  height="500px"
                   styleClass="edit-dialog">
-            <h:form id="editForm"  enctype="multipart/form-data">
+            <h:form id="editForm" enctype="multipart/form-data">
                 <div class="edit-form">
                     <div class="form-group">
                         <p:outputLabel for="editVideoFile" value="Replace Video File (optional):" />
-                        <p:fileUpload id="editVideoFile"
-                                      value="#{uploaderBean.uploadedFile}"
-                                      mode="simple"
-                                      accept="video/*"
-                                      label="Choose Video"
-                                      uploadLabel="Upload"
-                                      cancelLabel="Cancel" />
+                        <p:fileUpload 
+                            id="editVideoFile" 
+                            value="#{uploaderBean.uploadedFile}" 
+                            mode="simple" 
+                            accept="video/*" 
+                            label="Choose Video" 
+                            uploadLabel="Upload" 
+                            cancelLabel="Cancel" />
                     </div>
+
                     <div class="form-group">
                         <p:outputLabel for="editTitle" value="Video Title:" />
-                        <p:inputText id="editTitle" value="#{uploaderBean.selectedVideo.title}" 
-                                     required="true" requiredMessage="Video title is required"
+                        <p:inputText id="editTitle" 
+                                     value="#{uploaderBean.selectedVideo.title}" 
+                                     required="true"
                                      placeholder="Enter video title" />
                     </div>
 
@@ -283,13 +275,15 @@
                         <p:outputLabel for="editDescription" value="Description:" />
                         <p:inputTextarea id="editDescription" 
                                          value="#{uploaderBean.selectedVideo.description}" 
-                                         rows="4" 
+                                         rows="4"
                                          placeholder="Enter video description" />
                     </div>
 
                     <div class="form-group">
                         <p:outputLabel for="editCategory" value="Category:" />
-                        <p:selectOneMenu id="editCategory" value="#{uploaderBean.selectedVideo.categoryID.categoryName}">
+                        <p:selectOneMenu id="editCategory" 
+                                         value="#{uploaderBean.selectedVideo.categoryID.categoryName}"
+                                         required="true">
                             <f:selectItem itemLabel="Select Category" itemValue="" />
                             <f:selectItems value="#{uploaderBean.availableCategories}" 
                                            var="cat" 
@@ -300,19 +294,21 @@
 
                     <div class="form-actions">
                         <p:commandButton value="Cancel" 
-                                         styleClass="cancel-btn"
                                          onclick="PF('editDialog').hide()" 
-                                         type="button" />
+                                         type="button"
+                                         styleClass="ui-button-secondary" />
                         <p:commandButton value="Save Changes" 
                                          styleClass="save-btn"
-                                         action="#{uploaderBean.saveEditedVideo}"
-                                         update=":mainForm"
+                                         action="#{uploaderBean.saveEditedVideo()}"
+                                         update=":mainForm :messages"
                                          oncomplete="if(!args.validationFailed) PF('editDialog').hide();" />
                     </div>
                 </div>
+
+                <!-- Messages for edit form -->
+
             </h:form>
         </p:dialog>
-        <!-- Messages -->
         <p:messages id="messages" showDetail="true" />
 
     </h:body>

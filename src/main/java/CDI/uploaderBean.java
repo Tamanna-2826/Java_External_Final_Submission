@@ -168,23 +168,6 @@ public class uploaderBean implements Serializable {
         categories = videoService.getAllCategories();
     }
 
-//    private void createViewsChart() {
-//        viewsChartModel = new LineChartModel();
-//        LineChartSeries series = new LineChartSeries();
-//        series.setLabel("Views");
-//
-//        Map<String, Integer> analytics = videoService.getViewsAnalytics(currentUser);
-//        for (Map.Entry<String, Integer> entry : analytics.entrySet()) {
-//            series.set(entry.getKey(), entry.getValue());
-//        }
-//
-//        viewsChartModel.addSeries(series);
-//        viewsChartModel.setTitle("Views Analytics");
-//        viewsChartModel.setLegendPosition("ne");
-//        viewsChartModel.setAnimate(true);
-//        viewsChartModel.getAxis("yAxis").setLabel("Views");
-//        viewsChartModel.getAxis("xAxis").setLabel("Date");
-//    }
     public List<Categories> getAvailableCategories() {
         return categoryBean.getCategories(); // Use CategoryBean's categories
     }
@@ -477,6 +460,7 @@ public class uploaderBean implements Serializable {
 
     public void saveEditedVideo() {
         Logger logger = LoggerFactory.getLogger(uploaderBean.class);
+        System.out.println("Selected Video for edit: " + selectedVideo);
 
         try {
             if (selectedVideo == null) {
@@ -491,8 +475,12 @@ public class uploaderBean implements Serializable {
                 return;
             }
 
-            // Validate and set category
-            String categoryName = selectedVideo.getCategoryID() != null ? selectedVideo.getCategoryID().getCategoryName() : null;
+            // Handle category validation and setting
+            String categoryName = null;
+            if (selectedVideo.getCategoryID() != null) {
+                categoryName = selectedVideo.getCategoryID().getCategoryName();
+            }
+
             if (categoryName == null || categoryName.trim().isEmpty()) {
                 showMessage("Error", "Please select a category.", FacesMessage.SEVERITY_ERROR);
                 return;
@@ -508,21 +496,22 @@ public class uploaderBean implements Serializable {
 
             // Handle video file replacement if a new file is uploaded
             if (uploadedFile != null && uploadedFile.getSize() > 0) {
-                // Delete old video and thumbnail files
-                String oldVideoPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(selectedVideo.getVideourl());
-                String oldThumbnailPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(selectedVideo.getThumbnailurl());
-                Files.deleteIfExists(Paths.get(oldVideoPath));
-                Files.deleteIfExists(Paths.get(oldThumbnailPath));
+                logger.info("New video file uploaded, processing replacement...");
+
+                // Get old file paths for cleanup
+                String oldVideoUrl = selectedVideo.getVideourl();
+                String oldThumbnailUrl = selectedVideo.getThumbnailurl();
 
                 // Save new video file
-                String filePath = saveUploadedFile(uploadedFile);
-                if (filePath == null) {
+                String newFilePath = saveUploadedFile(uploadedFile);
+                if (newFilePath == null) {
                     showMessage("Error", "Failed to save new video file.", FacesMessage.SEVERITY_ERROR);
                     return;
                 }
-                String fullVideoPath = getFullFilePath();
 
+                String fullVideoPath = getFullFilePath();
                 File videoFile = new File(fullVideoPath);
+
                 if (!videoFile.exists() || !videoFile.canRead()) {
                     logger.error("File does not exist or is not readable: {}", fullVideoPath);
                     showMessage("Error", "Saved file is not accessible.", FacesMessage.SEVERITY_ERROR);
@@ -530,6 +519,7 @@ public class uploaderBean implements Serializable {
                     return;
                 }
 
+                // Calculate duration for new video
                 int durationInSeconds = VideoDurationCalculator.getVideoDurationUsingHumbleVideo(fullVideoPath);
                 if (durationInSeconds < 0) {
                     logger.error("Failed to calculate duration for: {}", fullVideoPath);
@@ -538,10 +528,17 @@ public class uploaderBean implements Serializable {
                     return;
                 }
 
+                // Generate new thumbnail
                 Path videoPath = Paths.get(fullVideoPath);
                 String videoFileName = videoPath.getFileName().toString();
                 String thumbnailFileName = videoFileName.replace(".mp4", ".jpg");
+
+                // Create thumbnails directory if it doesn't exist
                 Path thumbnailDir = videoPath.getParent().getParent().resolve("thumbnails");
+                if (!Files.exists(thumbnailDir)) {
+                    Files.createDirectories(thumbnailDir);
+                }
+
                 String absoluteThumbnailPath = thumbnailDir.resolve(thumbnailFileName).toString();
 
                 boolean thumbnailGenerated = ThumbnailUtil.generateThumbnail(fullVideoPath, absoluteThumbnailPath);
@@ -560,10 +557,26 @@ public class uploaderBean implements Serializable {
                     return;
                 }
 
-                // Update video paths and duration
-                selectedVideo.setVideourl(filePath);
+                // Update video with new file paths and duration
+                selectedVideo.setVideourl(newFilePath);
                 selectedVideo.setThumbnailurl("/uploads/thumbnails/" + thumbnailFileName);
                 selectedVideo.setDuration(durationInSeconds);
+
+                // Clean up old files after successful processing (optional - be careful with this)
+                try {
+                    if (oldVideoUrl != null && !oldVideoUrl.equals(newFilePath)) {
+                        // Convert relative path to absolute path for deletion
+                        String oldVideoAbsolutePath = "D:\\Sem 8\\Java_Project\\Java_External_Final_Submission\\src\\main\\webapp" + oldVideoUrl;
+                        Files.deleteIfExists(Paths.get(oldVideoAbsolutePath));
+                    }
+                    if (oldThumbnailUrl != null) {
+                        String oldThumbnailAbsolutePath = "D:\\Sem 8\\Java_Project\\Java_External_Final_Submission\\src\\main\\webapp" + oldThumbnailUrl;
+                        Files.deleteIfExists(Paths.get(oldThumbnailAbsolutePath));
+                    }
+                } catch (Exception cleanupException) {
+                    logger.warn("Failed to cleanup old files: {}", cleanupException.getMessage());
+                    // Don't fail the operation if cleanup fails
+                }
             }
 
             // Ensure description is not null
@@ -571,16 +584,17 @@ public class uploaderBean implements Serializable {
                 selectedVideo.setDescription("");
             }
 
+            // Trim text fields
+            selectedVideo.setTitle(selectedVideo.getTitle().trim());
+            selectedVideo.setDescription(selectedVideo.getDescription().trim());
+
             // Update the video in the database
             videoService.updateVideo(selectedVideo);
             logger.info("Video updated successfully: {}", selectedVideo);
 
-            // Refresh the DataTable and dashboard
+            // Refresh the data
             loadVideos();
             loadDashboardData();
-
-            // Close the dialog
-            FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add("PF('editDialog').hide();");
 
             // Show success message
             showMessage("Success", "Video updated successfully!", FacesMessage.SEVERITY_INFO);
@@ -696,6 +710,7 @@ public class uploaderBean implements Serializable {
 //        return viewsChartModel;
 //    }
     public UploadedFile getUploadedFile() {
+        System.out.println("Uploaded file for edit : " + uploadedFile);
         return uploadedFile;
     }
 

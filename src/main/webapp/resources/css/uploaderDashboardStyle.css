@@ -241,6 +241,8 @@ body {
     border: none !important;
     border-radius: 8px !important;
     overflow: hidden !important;
+    overflow-x: auto; /* Allow horizontal scrolling if content overflows */
+    white-space: nowrap; /* Prevent wrapping of table content */
 }
 
 .video-table .ui-datatable-header {
@@ -410,7 +412,7 @@ body {
 }
 
 .edit-dialog .save-btn {
-    background-color: #4CAF50;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -418,7 +420,7 @@ body {
 }
 
 .edit-dialog .save-btn:hover {
-    background-color: #45a049;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
 }
 
 .edit-dialog .cancel-btn {
@@ -447,6 +449,40 @@ body {
 .action-buttons a:hover {
     text-decoration: underline;
 }
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap to the next line if needed */
+    gap: 6px; /* Reduced gap to save space */
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.action-buttons .ui-button,
+.action-buttons .pi-play,
+.action-buttons .video-action-row a {
+    background: linear-gradient(135deg, #7289f0 0%, #8257b0 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 6px;
+    padding: 4px 8px; /* Reduced padding to make buttons smaller */
+    font-size: 12px; /* Reduced font size for better fit */
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap; /* Prevent text wrapping within the button */
+}
+
+.video-action-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Ensure the row can wrap if needed */
+}
+
+.video-action-row i {
+    font-size: 1rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .dashboard-container {

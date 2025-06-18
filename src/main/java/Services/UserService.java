@@ -52,6 +52,10 @@ public class UserService {
         return entityManager.find(Users.class, id);
     }
 
+     public Users findUserNameById(int id) {
+        return entityManager.find(Users.class, id);
+    }
+
     /**
      * Get all users with specific role
      */
