@@ -1,6 +1,7 @@
 CDI\usersListingBean.class
 Utilities\VideoDurationCalculator.class
 EJB\LikesBean.class
+EJB\UsersBean.class
 Filters\JwtAuthenticationFilter.class
 CDI\CategoryBean.class
 Entities\Likes.class
@@ -10,6 +11,7 @@ Converters\UserRoleConverter.class
 Entities\VideosQuality.class
 Test\PasswordTest.class
 CDI\usersListingBean$UserActivityDisplayModel.class
+EJB\UsersBeanLocal.class
 Entities\Playlists.class
 CDI\videoLisingBean.class
 Services\UserService$UsersStats.class
@@ -24,6 +26,7 @@ Enums\UserRole$1.class
 Utilities\ThumbnailUtil.class
 com\mycompany\java_external_final_submission\resources\JakartaEE10Resource.class
 CDI\uploaderListingBean$UploaderVideoDisplayModel.class
+CDI\UsersCDIBean.class
 CDI\uploaderBean$VideoDisplayModel.class
 EJB\VideoBean.class
 CDI\watchVideoBean.class
