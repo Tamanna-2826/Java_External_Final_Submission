@@ -2,16 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-    <h:head>
-        <title>Uploaders Management</title>
-        <h:outputStylesheet name="css/uploaders.css"/>
-    </h:head>
-    <h:body>
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="sidebar.xhtml">
+
+    <!-- Page title and subtitle for topbar -->
+    <ui:define name="pageTitle">Uploaders Management</ui:define>
+    <ui:define name="pageSubtitle">Manage your uploaders and view their performance</ui:define>
+
+    <!-- Main Content -->
+    <ui:define name="content">
         <h:form id="uploadersForm">
             <!-- Header with Search -->
             <div class="page-header">
-                <h2>Uploaders Management</h2>
+               
                 <p:inputText id="searchInput" value="#{uploaderListingBean.searchTerm}" 
                              placeholder="Search by name or email..."
                              styleClass="search-bar">
@@ -82,5 +87,7 @@
                 <p:commandButton value="Close" onclick="PF('uploaderDetailsDialog').hide();" styleClass="close-btn"/>
             </p:dialog>
         </h:form>
-    </h:body>
+    </ui:define>
+
+</ui:composition>
 </html>

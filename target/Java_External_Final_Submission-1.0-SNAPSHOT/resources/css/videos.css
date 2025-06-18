@@ -46,6 +46,22 @@ body {
     font-size: 16px;
     color: #666;
 }
+
+/* Button spacing */
+.search-btn, .clear-btn {
+    width: 100%;
+}
+
+.search-btn {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.clear-btn {
+    background-color: #6c757d;
+    color: #fff;
+}
+
 /* Video table styling */
 .video-table {
     width: 100%;
@@ -88,7 +104,6 @@ body {
 }
 
 /* Video details dialog styling */
-/* Video details dialog styling */
 .video-details-dialog .ui-dialog-content {
     padding: 20px;
     display: flex;
@@ -127,7 +142,6 @@ body {
 .video-info-grid td {
     padding: 8px;
     vertical-align: top; /* Align text to the top */
-
 }
 
 .video-info-grid td:first-child {
@@ -135,19 +149,18 @@ body {
     color: #555;
     width: 30%; /* Reserve space for labels */
 }
+
 .video-info-grid td:nth-child(2) {
-
     word-break: break-word; /* Ensure long text like the title wraps */
-
     max-width: 0; /* Prevent overflow by allowing text to wrap */
 }
+
 video {
     max-width: 100%;
     width: 100%;
     height: auto;
     max-height: 360px; /* Set a max-height to ensure consistent centering */
     margin-bottom: 20px;
-
 }
 
 .close-btn {
@@ -159,8 +172,6 @@ video {
     cursor: pointer;
     margin-top: 20px;
     align-self: flex-end; /* Align close button to the right */
-
-
 }
 
 .close-btn:hover {

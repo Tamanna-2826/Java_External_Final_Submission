@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/J2EE/EJB40/StatelessEjbClass.java to edit this template
+ * Click nbproject://nbproject/nbproject.xml to edit this template
  */
 package EJB;
 
@@ -231,19 +231,6 @@ public class VideoBean {
         return String.format("%d:%02d", minutes, seconds);
     }
 
-    // Search videos by uploader
-    public List<Videos> searchVideosByUploader(Users uploader, String searchTerm) {
-        TypedQuery<Videos> query = em.createQuery(
-                "SELECT v FROM Videos v WHERE v.userID = :uploader AND "
-                + "(LOWER(v.title) LIKE LOWER(:searchTerm) OR LOWER(v.description) LIKE LOWER(:searchTerm)) "
-                + "ORDER BY v.uploaddate DESC",
-                Videos.class
-        );
-        query.setParameter("uploader", uploader);
-        query.setParameter("searchTerm", "%" + searchTerm + "%");
-        return query.getResultList();
-    }
-
     // Get video statistics
     public Map<String, Object> getVideoStatistics(Videos video) {
         System.out.println("VIDEO Statistics: " + video);
@@ -272,7 +259,7 @@ public class VideoBean {
 
         stats.put("likes", likeCount);
         stats.put("views", video.getViewscount());
-        stats.put("comments", commentCount); // Placeholder if Comments entity exists
+        stats.put("comments", commentCount);
 
         return stats;
     }
@@ -288,8 +275,8 @@ public class VideoBean {
         video.setViewscount(video.getViewscount() + 1);
         em.merge(video);
     }
-    // New method to count total videos
 
+    // Count total videos
     public long countTotalVideos() {
         try {
             TypedQuery<Long> query = em.createQuery(
@@ -302,7 +289,7 @@ public class VideoBean {
         }
     }
 
-    // New method to count total videos for the previous day
+    // Count total videos for the previous day
     public long countTotalVideosPreviousDay() {
         try {
             TypedQuery<Long> query = em.createQuery(
@@ -316,8 +303,8 @@ public class VideoBean {
             return 0;
         }
     }
-    // Get all videos
 
+    // Get all videos
     public List<Videos> getAllVideos() {
         TypedQuery<Videos> query = em.createQuery(
                 "SELECT v FROM Videos v ORDER BY v.uploaddate DESC",
@@ -326,6 +313,41 @@ public class VideoBean {
         return query.getResultList();
     }
 
+    // Search videos by keyword in title or description
+    public List<Videos> searchVideosByKeyword(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getAllVideos();
+        }
+        TypedQuery<Videos> query = em.createQuery(
+                "SELECT v FROM Videos v WHERE v.status = :status AND " +
+                "(LOWER(v.title) LIKE :keyword OR LOWER(v.description) LIKE :keyword) " +
+                "ORDER BY v.uploaddate DESC",
+                Videos.class
+        );
+        query.setParameter("status", "published");
+        query.setParameter("keyword", "%" + keyword.toLowerCase() + "%");
+        return query.getResultList();
+    }
+
+    // Search videos by keyword and category
+    public List<Videos> searchVideosByKeywordAndCategory(String keyword, int categoryId) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getVideosByCategory(categoryId);
+        }
+        TypedQuery<Videos> query = em.createQuery(
+                "SELECT v FROM Videos v WHERE v.status = :status AND " +
+                "v.category.categoryID = :catId AND " +
+                "(LOWER(v.title) LIKE :keyword OR LOWER(v.description) LIKE :keyword) " +
+                "ORDER BY v.uploaddate DESC",
+                Videos.class
+        );
+        query.setParameter("status", "published");
+        query.setParameter("catId", categoryId);
+        query.setParameter("keyword", "%" + keyword.toLowerCase() + "%");
+        return query.getResultList();
+    }
+
+    // Get watch history by user
     public List<WatchHistory> getWatchHistoryByUser(int userId) {
         TypedQuery<WatchHistory> query = em.createQuery(
                 "SELECT w FROM WatchHistory w WHERE w.userID = :userId ORDER BY w.watchedAt DESC",
@@ -335,6 +357,7 @@ public class VideoBean {
         return query.getResultList();
     }
 
+    // Add watch history entry
     public void addWatchHistoryEntry(int userId, int videoId, String deviceinfo) {
         WatchHistory watchHistory = new WatchHistory();
         watchHistory.setUserID(userId);
@@ -345,6 +368,7 @@ public class VideoBean {
         em.persist(watchHistory);
     }
 
+    // Get videos by category
     public List<Videos> getVideosByCategory(int categoryId) {
         return em.createQuery("SELECT v FROM Videos v WHERE v.categoryID.categoryID = :catId AND v.status = 'published'", Videos.class)
                 .setParameter("catId", categoryId)

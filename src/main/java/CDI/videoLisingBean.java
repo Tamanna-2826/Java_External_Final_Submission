@@ -1,10 +1,10 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSF/JSFManagedBean.java to edit this template
+ * Click nbproject://nbproject/nbproject.xml to edit this template
  */
 package CDI;
 
 import EJB.VideoBean;
+import Entities.Categories;
 import Entities.Videos;
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
@@ -31,6 +31,9 @@ public class videoLisingBean implements Serializable {
     private List<Videos> filteredVideos; // For search functionality
     private Videos selectedVideo; // For detailed view
     private String searchTerm; // For search input
+    private String searchType; // To determine the type of search (all, title, category)
+    private Integer selectedCategoryId; // For category-based search
+    private List<Categories> categories; // To store available categories
     private String videoUrl; // To store the video URL for playback
 
     @EJB
@@ -38,7 +41,10 @@ public class videoLisingBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        searchType = "all"; // Default search type
+        selectedCategoryId = null; // Default to no category selected
         fetchVideos();
+        fetchCategories(); // Load categories for search dropdown
     }
 
     public videoLisingBean() {
@@ -46,7 +52,7 @@ public class videoLisingBean implements Serializable {
 
     public void fetchVideos() {
         try {
-            videos = videoService.getAllVideos(); // We'll add this method to VideoBean
+            videos = videoService.getAllVideos();
             filteredVideos = new ArrayList<>(videos); // Initialize filtered list
             if (videos == null || videos.isEmpty()) {
                 addInfoMessage("No videos found.");
@@ -57,23 +63,52 @@ public class videoLisingBean implements Serializable {
         }
     }
 
-    public void searchVideos() {
-        if (searchTerm == null || searchTerm.trim().isEmpty()) {
-            filteredVideos = new ArrayList<>(videos);
-            return;
-        }
-
-        filteredVideos = new ArrayList<>();
-        String lowerSearchTerm = searchTerm.toLowerCase();
-        for (Videos video : videos) {
-            boolean matchesTitle = video.getTitle().toLowerCase().contains(lowerSearchTerm);
-            boolean matchesUploader = video.getUserID() != null && video.getUserID().getFullName().toLowerCase().contains(lowerSearchTerm);
-            boolean matchesCategory = video.getCategoryID() != null && video.getCategoryID().getCategoryName().toLowerCase().contains(lowerSearchTerm);
-
-            if (matchesTitle || matchesUploader || matchesCategory) {
-                filteredVideos.add(video);
+    public void fetchCategories() {
+        try {
+            categories = videoService.getAllCategories();
+            if (categories == null || categories.isEmpty()) {
+                addInfoMessage("No categories found.");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            addErrorMessage("Error fetching categories.");
         }
+    }
+
+    public void searchVideos() {
+        try {
+            if (searchType == null || searchType.equals("all")) {
+                // If search term is empty, show all videos
+                if (searchTerm == null || searchTerm.trim().isEmpty()) {
+                    filteredVideos = new ArrayList<>(videos);
+                } else {
+                    filteredVideos = videoService.searchVideosByKeyword(searchTerm);
+                }
+            } else if (searchType.equals("category") && selectedCategoryId != null) {
+                // Search by category and optional keyword
+                filteredVideos = videoService.searchVideosByKeywordAndCategory(searchTerm, selectedCategoryId);
+            } else if (searchType.equals("title")) {
+                // Search by title only
+                filteredVideos = videoService.searchVideosByKeyword(searchTerm);
+            } else {
+                filteredVideos = new ArrayList<>(videos); // Fallback to all videos
+            }
+
+            if (filteredVideos.isEmpty()) {
+                addInfoMessage("No videos found for the search criteria.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            addErrorMessage("Error performing search.");
+        }
+    }
+
+    public void clearSearch() {
+        searchTerm = null;
+        searchType = "all";
+        selectedCategoryId = null;
+        filteredVideos = new ArrayList<>(videos); // Reset to all videos
+        addInfoMessage("Search cleared.");
     }
 
     public void viewVideoDetails(Videos video) {
@@ -144,6 +179,26 @@ public class videoLisingBean implements Serializable {
 
     public void setSearchTerm(String searchTerm) {
         this.searchTerm = searchTerm;
+    }
+
+    public String getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(String searchType) {
+        this.searchType = searchType;
+    }
+
+    public Integer getSelectedCategoryId() {
+        return selectedCategoryId;
+    }
+
+    public void setSelectedCategoryId(Integer selectedCategoryId) {
+        this.selectedCategoryId = selectedCategoryId;
+    }
+
+    public List<Categories> getCategories() {
+        return categories;
     }
 
     public String getVideoUrl() {
