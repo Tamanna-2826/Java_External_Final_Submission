@@ -1,211 +1,224 @@
-body.login-body {
-    background: linear-gradient(to bottom right, #e0e7ff, #d6deff);
+/* General page styling */
+.login-body {
     font-family: 'Inter', sans-serif;
+    background-image: url('../../uploads/image1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    margin: 0;
-}
-
-.login-form {
-    background-color: #ffffff;
-    padding: 1.8rem;
-    border-radius: 24px;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-    width: 100%;
-    max-width: 340px;
-    box-sizing: border-box;
-    text-align: center;
     position: relative;
-    transition: transform 0.3s ease;
 }
 
-.login-form:hover {
-    transform: translateY(-4px);
+/* Adding a semi-transparent overlay to improve text readability */
+.login-body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for better contrast */
+    z-index: 1;
 }
 
-.back-link {
-    display: none;
+/* Login form styling with fade-in animation */
+.login-form {
+    position: relative;
+    z-index: 2; /* Ensure form is above the overlay */
+    width: 100%;
+    max-width: 600px; /* Increased width for a wider container */
+    padding: 30px; /* Adjusted padding for better spacing */
+    animation: fadeIn 1s ease-in-out forwards;
+}
+
+/* Logo section styling with slide-in animation */
+.logo-section {
+    text-align: center;
+    margin-bottom: 25px; /* Adjusted margin for better spacing inside the card */
+    animation: slideInFromTop 0.8s ease-out forwards;
 }
 
 .logo {
     display: flex;
-    justify-content: center;
     align-items: center;
-    font-size: 1.9rem;
-    font-weight: 800;
-    color: #4f46e5;
-    margin-bottom: 1.2rem;
-    letter-spacing: 0.5px;
+    justify-content: center;
+    font-size: 28px; /* Slightly larger for prominence */
+    font-weight: 700;
+    color: #333; /* Darker color to match the card background */
 }
 
 .logo-icon {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
     margin-right: 10px;
-    font-size: 19px;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    font-size: 34px; /* Slightly larger icon */
 }
 
-.card h2 {
-    font-size: 1.3rem;
-    margin-bottom: 1.1rem;
-    color: #1f2937;
-    font-weight: 700;
+/* Card styling */
+.card {
+    background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white for the card */
+    padding: 40px; /* Increased padding to match the wider container */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-.role-toggle,
+/* Role toggle styling */
+.role-toggle {
+    margin-bottom: 20px;
+}
+
+.role-toggle button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.role-toggle button.active {
+    background-color: #0056b3;
+}
+
+/* Action toggle styling */
 .action-toggle {
     display: flex;
     justify-content: center;
-    margin-bottom: 1.1rem;
-    gap: 8px;
+    margin-bottom: 20px;
 }
 
-.role-toggle button,
-.action-toggle button {
-    padding: 0.55rem 1.2rem;
+.toggle-button {
+    background-color: #e9ecef;
+    color: #333;
     border: none;
-    border-radius: 10px;
-    background-color: #f1f5f9;
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: #374151;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin: 0 5px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.role-toggle button:hover,
-.action-toggle button:hover {
-    background-color: #e0e7ff;
-    transform: translateY(-2px);
-}
-
-.role-toggle .active,
-.action-toggle .active {
-    background: linear-gradient(to right, #5e2ecc, #6558f5);
+.toggle-button.active {
+    background-color: #007bff;
     color: #fff;
-    box-shadow: 0 4px 12px rgba(94, 46, 204, 0.2);
 }
 
+/* Icon container styling with pulse animation */
 .icon-container {
-    background: #f0edff;
-    border-radius: 50%;
-    width: 58px;
-    height: 58px;
-    margin: 0.9rem auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    color: #5e2ecc;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    animation: pulse 2s infinite ease-in-out;
 }
 
+.login-icon {
+    font-size: 40px;
+}
+
+/* Heading styling */
+h3 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Input field styling */
 .input-field {
     width: 100%;
-    padding: 0.75rem;
-    margin: 0.5rem 0 0.9rem;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    transition: all 0.3s ease;
-    background-color: #f9fafb;
+    padding: 12px; /* Slightly increased padding for better appearance */
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
 .input-field:focus {
-    border-color: #6558f5;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(101, 88, 245, 0.1);
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
-.submit-button,
-.register-button {
+/* Label styling */
+h4 {
+    margin: 5px 0;
+    color: #555;
+}
+
+/* Submit button styling with hover animation */
+.submit-button {
     width: 100%;
-    padding: 0.8rem;
-    background: linear-gradient(to right, #5e2ecc, #6558f5);
+    background-color: #007bff;
     color: #fff;
     border: none;
-    border-radius: 12px;
-    font-size: 0.95rem;
-    font-weight: 600;
+    padding: 12px;
+    border-radius: 5px;
     cursor: pointer;
-    margin-top: 0.5rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 6px 16px rgba(94, 46, 204, 0.2);
-    position: relative;
-    overflow: hidden;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.submit-button:hover,
-.register-button:hover {
-    background: linear-gradient(to right, #4a1ab7, #5641e4);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(94, 46, 204, 0.3);
+.submit-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
-.submit-button:active,
-.register-button:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 12px rgba(94, 46, 204, 0.15);
-}
-
+/* Terms section styling */
 .terms {
-    font-size: 0.75rem;
-    margin-top: 1.1rem;
-    color: #6b7280;
+    margin-top: 20px;
+    font-size: 12px;
+    color: #666;
 }
 
 .terms a {
-    color: #6558f5;
+    color: #007bff;
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
 }
 
 .terms a:hover {
-    color: #4a1ab7;
+    text-decoration: underline;
 }
 
+/* Error message styling */
 .error-message {
-    color: #dc2626;
-    font-size: 0.75rem;
-    margin: 0.4rem 0;
+    color: #dc3545;
+    margin-bottom: 15px;
+    font-size: 14px;
 }
 
-@media (max-width: 480px) {
-    .login-form {
-        padding: 1.4rem;
-        max-width: 90%;
+/* Keyframe animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
     }
-
-    .logo {
-        font-size: 1.5rem;
+    100% {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
 
-    .logo-icon {
-        width: 34px;
-        height: 34px;
-        font-size: 17px;
+@keyframes slideInFromTop {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px);
     }
-
-    .input-field,
-    .submit-button,
-    .register-button {
-        font-size: 0.85rem;
+    100% {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
 
-    .role-toggle button,
-    .action-toggle button {
-        padding: 0.45rem 0.9rem;
-        font-size: 0.8rem;
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
     }
 }

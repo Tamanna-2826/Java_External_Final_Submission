@@ -44,7 +44,7 @@
                             <h:link outcome="sidebar.xhtml" styleClass="menu-link">
                                 <i class="fas fa-tachometer-alt menu-icon"></i>
                                 <span>Dashboard</span>
-                                
+
                             </h:link>
                         </li>
                         <li class="menu-item">
@@ -58,8 +58,9 @@
                             <h:link outcome="users.xhtml" styleClass="menu-link">
                                 <i class="fas fa-users menu-icon"></i>
                                 <span>Users</span>
-                                <span class="menu-badge">#{loginBean.userCount >= 1000 ? (loginBean.userCount / 1000.0) + 'K' : loginBean.userCount}</span>
-                            </h:link>
+                                <span class="menu-badge">
+                                    #{usersCDIBean.totalUsers >= 1000 ? (usersCDIBean.totalUsers / 1000.0) + 'K' : usersCDIBean.totalUsers}
+                                </span>                            </h:link>
                         </li>
                         <li class="menu-item">
                             <h:link outcome="videos.xhtml" styleClass="menu-link">
@@ -76,8 +77,8 @@
                                 <span class="menu-badge">#{categoryBean.totalCategories}</span>
                             </h:link>
                         </li>
-                       
-                        
+
+
                         <li class="menu-item">
                             <h:commandLink action="settings" styleClass="menu-link">
                                 <i class="fas fa-cog menu-icon"></i>

@@ -13,22 +13,18 @@
             <h:outputStylesheet name="css/uploaderLogin.css"/>
         </h:head>
         <h:body styleClass="login-body">
-
             <h:form styleClass="login-form">
-
-               
-                <div class="logo-section">
-                    <div class="logo">
-                        <div class="logo-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        Learnify
-                    </div>
-                </div>
-
-
                 <div class="card">
-                    
+                    <!-- Logo-section inside the card -->
+                    <div class="logo-section">
+                        <div class="logo">
+                            <div class="logo-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            Learnify
+                        </div>
+                    </div>
+
                     <div class="role-toggle">
                         <button type="button" class="active">Instructor</button>
                     </div>
@@ -44,7 +40,6 @@
                         </h:commandButton>
                     </div>
 
-
                     <div class="icon-container">
                         <i class="login-icon">🎥</i>
                     </div>
@@ -52,7 +47,6 @@
 
                     <h:messages globalOnly="true" styleClass="error-message" />
                     <!-- Show Full Name only if registering -->
-
                     <h:panelGroup rendered="#{loginBean.actionType eq 'register'}">
                         <h:outputLabel for="fullName" value="Full Name" />
                         <h:inputText id="fullName" value="#{loginBean.fullName}" styleClass="input-field" required="true" />
@@ -75,7 +69,6 @@
                                          action="#{loginBean.register}"
                                          styleClass="submit-button" />
                     </h:panelGroup>
-
 
                     <div class="terms">
                         By continuing, you agree to our

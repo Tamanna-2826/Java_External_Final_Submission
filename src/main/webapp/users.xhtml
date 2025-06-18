@@ -10,76 +10,47 @@
     <ui:define name="pageSubtitle">Monitor and manage users on the platform</ui:define>
 
     <ui:define name="content">
-        <h:form id="usersForm">
-            <!-- Header with Search -->
-            <div class="page-header">
-                <h2>Users Management</h2>
-                <p:inputText id="searchInput" value="#{usersListingBean.searchTerm}" 
-                             placeholder="Search by name or email..."
-                             styleClass="search-bar">
-                    <p:ajax event="keyup" listener="#{usersListingBean.searchUsers()}"
-                            update="usersTable"/>
-                </p:inputText>
-            </div>
+        <h:outputStylesheet name="css/users.css"/>
 
-            <!-- Users Table -->
-            <p:dataTable id="usersTable" value="#{usersListingBean.filteredUsers}" var="user"
-                         styleClass="user-table" emptyMessage="No users found.">
+        <h:form id="usersForm">
+
+            <!-- 🔍 Search Bar -->
+            <p:panel header="Search Users" style="margin-bottom: 1rem;">
+                <p:inputText id="searchTerm" value="#{usersCDIBean.searchTerm}" 
+                             placeholder="Enter name or email..." style="width:300px; margin-right:10px" />
+                <p:commandButton value="Search" icon="pi pi-search" update="usersTable"
+                                 action="#{usersCDIBean.searchUsers}" />
+                <p:commandButton value="Reset" icon="pi pi-refresh" update="usersTable,searchTerm"
+                                 action="#{usersCDIBean.init}" styleClass="ui-button-secondary" />
+            </p:panel>
+
+            <!-- 📋 Users Table -->
+            <p:dataTable id="usersTable" value="#{usersCDIBean.userList}" var="user"
+                         styleClass="user-table" paginator="true" rows="5"
+                         emptyMessage="No users found.">
+
+                <p:column headerText="ID">
+                    <h:outputText value="#{user.userID}"/>
+                </p:column>
+
                 <p:column headerText="Name">
                     <h:outputText value="#{user.fullName}"/>
                 </p:column>
+
                 <p:column headerText="Email">
                     <h:outputText value="#{user.email}"/>
                 </p:column>
-                <p:column headerText="Joined Date">
-                    <h:outputText value="#{user.createdAt}">
-                        <f:convertDateTime pattern="MMM dd, yyyy"/>
-                    </h:outputText>
+
+                <p:column headerText="Role">
+                    <h:outputText value="#{user.role}"/>
                 </p:column>
-                <p:column headerText="Actions" styleClass="action-column">
-                    <p:commandButton value="View Details" styleClass="view-btn"
-                                     action="#{usersListingBean.viewUserDetails(user)}"
-                                     update=":usersForm:userDetailsDialog"/>
+
+                <p:column headerText="Subscription Status">
+                    <p:tag value="#{user.subscriptionStatus ? 'Yes' : 'No'}"
+                           severity="#{user.subscriptionStatus ? 'success' : 'danger'}"/>
                 </p:column>
+
             </p:dataTable>
-
-            <!-- User Details Dialog -->
-            <p:dialog id="userDetailsDialog" header="User Details" widgetVar="userDetailsDialog"
-                      modal="true" styleClass="user-details-dialog" resizable="false">
-                <h:panelGroup rendered="#{usersListingBean.selectedUser != null}">
-                    <h:panelGrid columns="2" styleClass="user-info-grid">
-                        <h:outputLabel value="Name:"/>
-                        <h:outputText value="#{usersListingBean.selectedUser.fullName}"/>
-                        <h:outputLabel value="Email:"/>
-                        <h:outputText value="#{usersListingBean.selectedUser.email}"/>
-                        <h:outputLabel value="Total Videos Watched:"/>
-                        <h:outputText value="#{usersListingBean.getTotalVideosWatched(usersListingBean.selectedUser)}"/>
-                        <h:outputLabel value="Total Likes Given:"/>
-                        <h:outputText value="#{usersListingBean.formatCount(usersListingBean.getTotalLikesGiven(usersListingBean.selectedUser))}"/>
-                        <h:outputLabel value="Total Comments Made:"/>
-                        <h:outputText value="#{usersListingBean.formatCount(usersListingBean.getTotalCommentsMade(usersListingBean.selectedUser))}"/>
-                    </h:panelGrid>
-
-                    <h3>Watch History</h3>
-                    <p:dataTable value="#{usersListingBean.userWatchHistory}" var="activityModel"
-                                 styleClass="watch-history-table" emptyMessage="No watch history for this user.">
-                        <p:column headerText="Video ID">
-                            <h:outputText value="#{activityModel.videoID}"/>
-                        </p:column>
-                        <p:column headerText="Watched At">
-                            <h:outputText value="#{activityModel.formattedWatchedAt}"/>
-                        </p:column>
-                        <p:column headerText="Watch Duration (seconds)">
-                            <h:outputText value="#{activityModel.watchDuration}"/>
-                        </p:column>
-                        <p:column headerText="Device Info">
-                            <h:outputText value="#{activityModel.deviceInfo}"/>
-                        </p:column>
-                    </p:dataTable>
-
-                    <p:commandButton value="Close" onclick="PF('userDetailsDialog').hide();" styleClass="close-btn"/>
-                </h:panelGroup>
-            </p:dialog>
         </h:form>
     </ui:define>
 </ui:composition>
